@@ -55,6 +55,49 @@ class InPatientTimetable(db.Model):
 class ExpertsTimetable(db.Model):
     __tablename__ = 'expertstimetable'
     id = db.Column(db.Integer, primary_key=True)
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('doctorinfo.id'))
-    cid = db.Column(db.Integer, db.ForeignKey('hospitalclass.id'))
+    doctorinfoid = db.Column(db.String(64), db.FornignKey('doctorinfo.id'))
+    cid = db.Column(db.Integer, db.FornignKey('hospitalclass.id'))
     date = db.Column(db.String(128))
+
+class Medicine(db.Model):
+    __tablename__ = 'medicine'
+    id = db.Column(db.Integer, primary_key=True) #6位，1开头，自增
+    medicineclass = db.Column(db.Integer) #药品类别， 0代表中药， 1代表西药
+    medicinename = db.Column(db.String(128))
+
+class CheckClass(db.Model):
+    __tablename__ = 'checkclass'
+    id = db.Column(db.Integer, primary_key=True)
+    checkcname = db.Column(db.String(64))
+
+class CheckItem(db.Model):
+    __tablename__ = 'checkitem'
+    id = db.Column(db.Integer, primary_key=True) #6位，2开头，自增
+    checkitemname = db.Column(db.String(64))
+    itemclass = db.Column(db.Integer, db.FornignKey('checkclass.id'))
+
+class ExamClass(db.Model):
+    __tablename__ = 'examclass'
+    id = db.Column(db.Integer, primary_key=True) #6位，3开头，自增
+    examname = db.Column(db.String(64))
+
+class ExamItem(db.Model):
+    __tablename__ = 'examitem'
+    id = db.Column(db.Integer, primary_key=True)
+    examitemname = db.Column(db.String(64))
+    itemclass = db.Column(db.Integer, db.FornignKey('checkclass.id'))
+
+class InhospitalArea(db.Model):
+    __tablename__ = 'inhospitalarea'
+    id = db.Column(db.Integer, primary_key=True)
+    areaname = db.Column(db.String(64))
+
+class BedInfo(db.Model):
+    __tablename__ = 'bedinfo'
+    id = db.Column(db.Integer, primary_key=True)
+    areaid = db.Column(db.Integer, db.FornignKey('inhospitalarea.id'))
+
+class Price(db.Model):
+    __tablename__ = 'price'
+    optionid = db.Column(db.Integer) #为药品、检查、检验ID
+    price = db.Column(db.Float)
