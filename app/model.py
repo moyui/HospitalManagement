@@ -13,7 +13,6 @@ class HospitalClass(db.Model):
     name = db.Column(db.String(64), unique=True)
     # date = db.Column(db.String(128))
     cid = db.Column(db.Integer, db.ForeignKey('hospitalclass.id'))
-
     #时间跟着医生走，需要一张类似于选课，医生与科室的视图（工作时间）。防止时间冲突
 
 class PatientInfo(db.Model):
