@@ -1,11 +1,22 @@
 from . import db
 
+class UserGroup(db.Model):
+    __tablename__ = 'usergroup'
+    id = db.Column(db.Integer, primary_key=True) #每个用户记得添加用户组
+    name = db.Column(db.String(64)) 
+
+class AdminTable(db.Model):
+    __tablename__ = 'admintable'
+    idcard = db.Column(db.String(64), primary_key=True)
+    name = db.Column(db.String(64))
+    password = db.Column(db.String(64))
+    groupid = db.Column(db.Integer, db.ForeignKey('usergroup.id'))
+
 class HospitalConstuct(db.Model):
     __tablename__ = 'hospitalconstuct'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     hospitalclass = db.relativeship('HospitalClass', backref='itsclasss', lazy='dynamic')
-
 
 class HospitalClass(db.Model):
     __tablename__ = 'hospitalclass'
