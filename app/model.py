@@ -1,11 +1,22 @@
 from . import db
 
+class UserGroup(db.Model):
+    __tablename__ = 'usergroup'
+    id = db.Column(db.Integer, primary_key=True) #每个用户记得添加用户组
+    name = db.Column(db.String(64)) 
+
+class AdminTable(db.Model):
+    __tablename__ = 'admintable'
+    idcard = db.Column(db.String(64), primary_key=True)
+    name = db.Column(db.String(64))
+    password = db.Column(db.String(64))
+    groupid = db.Column(db.Integer, db.ForeignKey('usergroup.id'))
+
 class HospitalConstuct(db.Model):
     __tablename__ = 'hospitalconstuct'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     hospitalclass = db.relativeship('HospitalClass', backref='itsclasss', lazy='dynamic')
-
 
 class HospitalClass(db.Model):
     __tablename__ = 'hospitalclass'
@@ -54,8 +65,8 @@ class InPatientTimetable(db.Model):
 class ExpertsTimetable(db.Model):
     __tablename__ = 'expertstimetable'
     id = db.Column(db.Integer, primary_key=True)
-    doctorinfoid = db.Column(db.String(64), db.FornignKey('doctorinfo.id'))
-    cid = db.Column(db.Integer, db.FornignKey('hospitalclass.id'))
+    doctorinfoid = db.Column(db.String(64), db.ForeignKey('doctorinfo.id'))
+    cid = db.Column(db.Integer, db.ForeignKey('hospitalclass.id'))
     date = db.Column(db.String(128))
 
 class Medicine(db.Model):
@@ -73,7 +84,7 @@ class CheckItem(db.Model):
     __tablename__ = 'checkitem'
     id = db.Column(db.Integer, primary_key=True) #6位，2开头，自增
     checkitemname = db.Column(db.String(64))
-    itemclass = db.Column(db.Integer, db.FornignKey('checkclass.id'))
+    itemclass = db.Column(db.Integer, db.ForeignKey('checkclass.id'))
 
 class ExamClass(db.Model):
     __tablename__ = 'examclass'
@@ -84,7 +95,7 @@ class ExamItem(db.Model):
     __tablename__ = 'examitem'
     id = db.Column(db.Integer, primary_key=True)
     examitemname = db.Column(db.String(64))
-    itemclass = db.Column(db.Integer, db.FornignKey('checkclass.id'))
+    itemclass = db.Column(db.Integer, db.ForeignKey('checkclass.id'))
 
 class InhospitalArea(db.Model):
     __tablename__ = 'inhospitalarea'
@@ -94,7 +105,7 @@ class InhospitalArea(db.Model):
 class BedInfo(db.Model):
     __tablename__ = 'bedinfo'
     id = db.Column(db.Integer, primary_key=True)
-    areaid = db.Column(db.Integer, db.FornignKey('inhospitalarea.id'))
+    areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
 
 class Price(db.Model):
     __tablename__ = 'price'
