@@ -52,7 +52,7 @@ class OutPatientTimetable(db.Model):
 class InPatientTimetable(db.Model):
     __tablename__ = 'inpatienttimetable'
     id = db.Column(db.Integer, primary_key=True)
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     date = db.Column(db.String(128))
 
 #缺少急诊
@@ -60,7 +60,7 @@ class InPatientTimetable(db.Model):
 class ExpertsTimetable(db.Model):
     __tablename__ = 'expertstimetable'
     id = db.Column(db.Integer, primary_key=True)
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     cid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
     date = db.Column(db.String(128))
 
@@ -77,7 +77,7 @@ class CheckClass(db.Model):
 
 class CheckItem(db.Model):
     __tablename__ = 'checkitem'
-    id = db.Column(db.Integer, primary_key=True) #6位，2开头，自增
+    id = db.Column(db.String(128), primary_key=True) #6位，2开头，自增
     checkitemname = db.Column(db.String(64))
     itemclass = db.Column(db.Integer, db.ForeignKey('checkclass.id'))
 
@@ -88,7 +88,7 @@ class ExamClass(db.Model):
 
 class ExamItem(db.Model):
     __tablename__ = 'examitem'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(128), primary_key=True)
     examitemname = db.Column(db.String(64))
     itemclass = db.Column(db.Integer, db.ForeignKey('checkclass.id'))
 
@@ -106,4 +106,100 @@ class Price(db.Model):
     __tablename__ = 'price'
     id = db.Column(db.String(20), primary_key=True)
     optionid = db.Column(db.Integer) #为药品、检查、检验ID
+    price = db.Column(db.Float)
+
+# from . import db
+
+# class FamilyDoctorArea(db.Model):                    #家庭医生服务区域
+#     __tablename__ = 'fdarea'
+#     Areaid = db.Column(db.Integer, primary_key=True)
+#     Areaname = db.Column(db.String(64))
+
+# class FamilyDoctorTeam(db.Model):                    #创建家庭医生团队
+#     __tablename__ = 'fdteam'
+#     FDTid = db.Column(db.Integer, primary_key=True)
+#     FDTareaid = db.Column(db.Integer, db.ForeignKey('fdarea.Areaid'))
+#     FDTareaname = db.Column(db.String(64), db.ForeignKey('fdarea.Areaname'))
+#     FDTdoctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+#     FDTdoctorname = db.Column(db.String(64), db.ForeignKey('userinfo.name'))
+#     FDTdoctorrank = db.Column(db.Integer, db.ForeignKey('userinfo.rank'))
+#     FDTteamdate = db.Column(db.String(128), db.ForeignKey('outpatienttimetable.date'))
+
+# class FamilyPatientInfo(db.Model):                   #家庭医生病人基本信息
+#     __tablename__ = 'fpinfo'
+#     FPid1 = db.Column(db.String(64), primary_key=True)  #病人身份证号
+#     FPname1 = db.Column(db.String(64))
+#     FPage = db.Column(db.Integer)
+#     FPsex = db.Column(db.String(64))
+#     FPphone = db.Column(db.String(64))
+
+# # class FamilyPatientTestResult(db.Model):             #体检结果
+# #     __tablename__ = 'fptestresult'
+# #     FPTRid = db.Column(db.Integer, primary_key=True)     #初始为1 自增
+# #     FPid2 = db.Column(db.String(64), db.ForeignKey('fpinfo.FPid1'))
+# #     FPname2 = db.Column(db.String(64), db.ForeignKey('fpinfo.FPname1'))
+# #     FPheartrate = db.Column(db.Integer)       #心率
+# #     FPbloodpressure = db.Column(db.Integer)   #血压
+
+# # class SpecialConcern(db.Model):                      #特殊关注对象
+# #     __tablename__ = 'specialconcern'
+# #     SCid = db.Column(db.Integer, primary_key=True)     #初始为1 自增
+# #     SCpid = db.Column(db.String(64), db.ForeignKey('fptestresult.FPid2'))      #特殊关注对象姓名
+# #     SCpname = db.Column(db.String(64), db.ForeignKey('fptestresult.FPname2'))  #特殊关注对象身份证 传递给门诊部
+
+# class LecturePlace(db.Model):
+#     __tablename__ = 'lectureplace'
+#     LPid = db.Column(db.Integer, primary_key=True)
+#     LPname = db.Column(db.String(64))                  
+#     LParea = db.Column(db.String(64))                  #安排讲座时area与团队领队医生的服务区域进行对比
+
+# class LectureTime(db.Model):
+#     __tablename__ = 'lecturename'
+#     LTid = db.Column(db.Integer, primary_key=True)
+#     LPid = db.Column(db.Integer, db.ForeignKey('lectureplace.LPid'))
+#     LPname = db.Column(db.String(64))
+
+class OpCheckin(db.Model):
+    __tablename__ = 'opcheckin'
+    id = db.Column(db.String(10), primary_key=True)
+    patientid = db.Column(db.String(10), db.ForeignKey('patientinfo.id'))
+    doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
+    doctime = db.Column(db.Integer, db.ForeignKey('outpatienttimetable.id'))
+    experttime = db.Column(db.Integer, db.ForeignKey('expertstimetable.id'))
+    # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
+    jips = db.Column(db.Boolean)
+
+class OpExam(db.Model):
+    __tablename__ = 'opexam'
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
+    examitems = db.Column(db.String(128), db.ForeignKey('examitem.id'))
+
+class OpCheck(db.Model):
+    __tablename__ = 'opcheck'
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
+    checkitems = db.Column(db.String(128), db.ForeignKey('checkitem.id'))
+
+class OpRecipe(db.Model):
+    __tablename__ = 'oprecipe'
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
+    medicinenames = db.Column(db.String(128))
+
+class OpCheckinAfford(db.Model):
+    __tablename__ = 'opcheckinafford'
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
+    price = db.Column(db.Float)
+
+class OpExamAfford(db.Model):
+    __tablename__ = 'opexamafford'
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
+    price = db.Column(db.Float)
+
+class OpCheckAfford(db.Model):
+    __tablename__ = 'opcheckafford'
+    id = db.Column(db.String(10),db.ForeignKey('opcheckin.id'), primary_key=True)
+    price = db.Column(db.Float)
+
+class OpRecipeAfford(db.Model):
+    __tablename__ = 'oprecipeafford'
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
     price = db.Column(db.Float)

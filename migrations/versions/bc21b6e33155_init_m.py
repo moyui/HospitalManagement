@@ -1,8 +1,8 @@
-"""initial migration
+"""init m
 
-Revision ID: 0b712c7b7ef0
+Revision ID: bc21b6e33155
 Revises: 
-Create Date: 2018-10-16 14:24:49.257710
+Create Date: 2018-10-30 13:42:08.186888
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0b712c7b7ef0'
+revision = 'bc21b6e33155'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -71,14 +71,14 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('checkitem',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.String(length=128), nullable=False),
     sa.Column('checkitemname', sa.String(length=64), nullable=True),
     sa.Column('itemclass', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['itemclass'], ['checkclass.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('examitem',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.String(length=128), nullable=False),
     sa.Column('examitemname', sa.String(length=64), nullable=True),
     sa.Column('itemclass', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['itemclass'], ['checkclass.id'], ),
@@ -112,18 +112,18 @@ def upgrade():
     )
     op.create_table('expertstimetable',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('doctorinfoid', sa.String(length=64), nullable=True),
+    sa.Column('userinfoid', sa.String(length=64), nullable=True),
     sa.Column('cid', sa.String(length=64), nullable=True),
     sa.Column('date', sa.String(length=128), nullable=True),
     sa.ForeignKeyConstraint(['cid'], ['hospitalclass.id'], ),
-    sa.ForeignKeyConstraint(['doctorinfoid'], ['userinfo.id'], ),
+    sa.ForeignKeyConstraint(['userinfoid'], ['userinfo.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('inpatienttimetable',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('doctorinfoid', sa.String(length=64), nullable=True),
+    sa.Column('userinfoid', sa.String(length=64), nullable=True),
     sa.Column('date', sa.String(length=128), nullable=True),
-    sa.ForeignKeyConstraint(['doctorinfoid'], ['userinfo.id'], ),
+    sa.ForeignKeyConstraint(['userinfoid'], ['userinfo.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('outpatienttimetable',
@@ -133,11 +133,76 @@ def upgrade():
     sa.ForeignKeyConstraint(['doctorcycleid'], ['doctorcycle.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('opcheckin',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('patientid', sa.String(length=10), nullable=True),
+    sa.Column('doctorid', sa.String(length=10), nullable=True),
+    sa.Column('doctime', sa.Integer(), nullable=True),
+    sa.Column('experttime', sa.Integer(), nullable=True),
+    sa.Column('jips', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['doctime'], ['outpatienttimetable.id'], ),
+    sa.ForeignKeyConstraint(['doctorid'], ['userinfo.id'], ),
+    sa.ForeignKeyConstraint(['experttime'], ['expertstimetable.id'], ),
+    sa.ForeignKeyConstraint(['patientid'], ['patientinfo.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('opcheck',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('checkitems', sa.String(length=128), nullable=True),
+    sa.ForeignKeyConstraint(['checkitems'], ['checkitem.id'], ),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('opcheckafford',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('opcheckinafford',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('opexam',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('examitems', sa.String(length=128), nullable=True),
+    sa.ForeignKeyConstraint(['examitems'], ['examitem.id'], ),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('opexamafford',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('oprecipe',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('medicinenames', sa.String(length=128), nullable=True),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('oprecipeafford',
+    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('price', sa.Float(), nullable=True),
+    sa.ForeignKeyConstraint(['id'], ['opcheckin.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('oprecipeafford')
+    op.drop_table('oprecipe')
+    op.drop_table('opexamafford')
+    op.drop_table('opexam')
+    op.drop_table('opcheckinafford')
+    op.drop_table('opcheckafford')
+    op.drop_table('opcheck')
+    op.drop_table('opcheckin')
     op.drop_table('outpatienttimetable')
     op.drop_table('inpatienttimetable')
     op.drop_table('expertstimetable')

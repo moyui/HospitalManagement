@@ -1,6 +1,6 @@
 import os 
-from app import create_app, db
-from app.model import UserGroup, HospitalConstuct, HospitalClass, PatientInfo, UserInfo, DoctorCycle, OutPatientTimetable, InPatientTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price
+from app import create_app, db 
+from app.model import UserGroup, HospitalConstuct, HospitalClass, PatientInfo, UserInfo, DoctorCycle, OutPatientTimetable, InPatientTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price, OpCheckin, OpExam, OpCheck, OpRecipe, OpCheckinAfford, OpExamAfford, OpCheckAfford, OpRecipeAfford
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
@@ -23,3 +23,5 @@ if __name__ == '__main__':
     manager.run()
     # app.run()
     #运行程序用
+
+# UserGroup, HospitalConstuct, HospitalClass, PatientInfo, UserInfo, DoctorCycle, OutPatientTimetable, InPatientTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price
