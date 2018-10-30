@@ -5,10 +5,12 @@ class UserGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True) #每个用户记得添加用户组
     name = db.Column(db.String(64)) 
 
-class AdminTable(db.Model):
-    __tablename__ = 'admintable'
-    idcard = db.Column(db.String(64), primary_key=True)
+class UserInfo(db.Model):#医生，管理员，院长一张表
+    __tablename__ = 'userinfo'
+    id = db.Column(db.String(64), primary_key=True) #身份证号
     name = db.Column(db.String(64))
+    sex = db.Column(db.Integer)
+    rank = db.Column(db.Integer) #0-普通 1-副主治 2-主治 3-专家
     password = db.Column(db.String(64))
     groupid = db.Column(db.Integer, db.ForeignKey('usergroup.id'))
 
@@ -16,14 +18,14 @@ class HospitalConstuct(db.Model):
     __tablename__ = 'hospitalconstuct'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    hospitalclass = db.relativeship('HospitalClass', backref='itsclasss', lazy='dynamic')
+    hospitalclass = db.relationship('HospitalClass', backref='itsclasss', lazy='dynamic')
 
 class HospitalClass(db.Model):
     __tablename__ = 'hospitalclass'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(64), primary_key=True)
     name = db.Column(db.String(64), unique=True)
     # date = db.Column(db.String(128))
-    cid = db.Column(db.Integer, db.ForeignKey('hospitalclass.id'))
+    cid = db.Column(db.Integer, db.ForeignKey('hospitalconstuct.id'))
     #时间跟着医生走，需要一张类似于选课，医生与科室的视图（工作时间）。防止时间冲突
 
 class PatientInfo(db.Model):
@@ -34,18 +36,11 @@ class PatientInfo(db.Model):
     sex = db.Column(db.Integer) #1-男 0-女
     age = db.Column(db.Integer)
 
-class DoctorInfo(db.Model):
-    __tablename__ = 'doctorinfo'
-    id = db.Column(db.String(64), primary_key=True) #身份证号
-    name = db.Column(db.String(64))
-    sex = db.Column(db.Integer)
-    rank = db.Column(db.Integer) #0-普通 1-副主治 2-主治 3-专家
-
 # 医生轮作
 class DoctorCycle(db.Model):
     __tablename__ = 'doctorcycle'
     id = db.Column(db.Integer, primary_key=True)
-    doctorid = db.Column(db.String(64), db.ForeignKey('doctorinfo.id'))
+    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     classid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
 
 class OutPatientTimetable(db.Model):
@@ -57,7 +52,7 @@ class OutPatientTimetable(db.Model):
 class InPatientTimetable(db.Model):
     __tablename__ = 'inpatienttimetable'
     id = db.Column(db.Integer, primary_key=True)
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('doctorinfo.id'))
+    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     date = db.Column(db.String(128))
 
 #缺少急诊
@@ -65,8 +60,8 @@ class InPatientTimetable(db.Model):
 class ExpertsTimetable(db.Model):
     __tablename__ = 'expertstimetable'
     id = db.Column(db.Integer, primary_key=True)
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('doctorinfo.id'))
-    cid = db.Column(db.Integer, db.ForeignKey('hospitalclass.id'))
+    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    cid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
     date = db.Column(db.String(128))
 
 class Medicine(db.Model):
@@ -109,5 +104,6 @@ class BedInfo(db.Model):
 
 class Price(db.Model):
     __tablename__ = 'price'
+    id = db.Column(db.String(20), primary_key=True)
     optionid = db.Column(db.Integer) #为药品、检查、检验ID
     price = db.Column(db.Float)
