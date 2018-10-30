@@ -1,6 +1,6 @@
 import os 
 from app import create_app, db 
-from app.model import UserGroup, HospitalConstuct, HospitalClass, PatientInfo, UserInfo, DoctorCycle, OutPatientTimetable, InPatientTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price, OpCheckin, OpExam, OpCheck, OpRecipe, OpCheckinAfford, OpExamAfford, OpCheckAfford, OpRecipeAfford
+from app.model import UserGroup, HospitalConstuct, HospitalClass, PatientInfo, UserInfo, DoctorCycle, OutPatientTimetable, InPatientTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price, OpCheckin, OpExam, OpCheck, OpRecipe, OpCheckinAfford, OpExamAfford, OpCheckAfford, OpRecipeAfford, InPatientTableSet, InhospitalArea, InPatientTimetable, InPatientCheck, InPatientInspect, InPatientPrescript, InPatientDeposit, InPatientTotalCost
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
@@ -15,7 +15,6 @@ manager.add_command('db', MigrateCommand)
 # def test():
 #     """Run the unit tests"""
 #     import unittest
-#     test = unittest.TestLoader().discover('tests')
 #     unittest.TextTestRunner(verbosity=2).run(tests)
 
 if __name__ == '__main__':

@@ -273,20 +273,17 @@ class InPatientTimeAndBed(db.Model):
     startdate = db.Column(db.Date)
     enddate = db.Column(db.Date)
 
-
 class InPatientCheck(db.Model):
     __tablename__ = 'inpatientcheck'
     id = db.Column(db.String(64), primary_key=True)
     checkitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
 
-
 class InPatientInspect(db.Model):
     __tablename__ = 'inpatientinspect'
     id = db.Column(db.String(64), primary_key=True)
     inspectitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-
 
 class InPatientPrescript(db.Model):
     __tablename__ = 'inpatientprescript'
