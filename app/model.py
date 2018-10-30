@@ -1,5 +1,5 @@
 from . import db
-
+# 对应的关系表 比如1-男 0-女 0-普通 1-副主治 2-主治 3-专家等写死还是创建表
 class UserGroup(db.Model):
     __tablename__ = 'usergroup'
     id = db.Column(db.Integer, primary_key=True) #每个用户记得添加用户组
