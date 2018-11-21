@@ -21,3 +21,4 @@ def getDeposit(id):
         db.session.commit()
         return redirect(url_for(''))
     return render_template('changes/deposit.html', form=form)
+

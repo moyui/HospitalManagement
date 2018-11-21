@@ -264,7 +264,6 @@ class InPatientTableSet(db.Model):
     inpatientprescriptid = db.Column(db.String(128))
     close = db.Column(db.Boolean)
 
-
 class InPatientTimeAndBed(db.Model):
     __tablename__ = 'inpatienttimeandbed'
     id = db.Column(db.String(64), primary_key=True)
