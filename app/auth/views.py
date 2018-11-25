@@ -28,7 +28,7 @@ def register():
         user = UserInfo(
             id = form.id.data,
             name = form.name.data,
-            sex = form.name.sex;
+            sex = form.name.sex,
             password = form.password.data,
             groupid = form.role.data,
             rank = form.rank.data

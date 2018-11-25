@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectField, PasswordField, ValidationError
 from wtforms.validators import DataRequired, Length, Regexp, EqualTo
-from .model import InPatientDeposit, InPatientTotalCost
+from ..model import InPatientDeposit, InPatientTotalCost
 
 class PreChargeForm(FlaskForm):
     id = StringField('身份证')
@@ -9,6 +9,7 @@ class PreChargeForm(FlaskForm):
     precharge = StringField('押金', validators=[
         DataRequired(), Regexp('^[0-9]+$', 0, '输入必须是数字')
     ])
+    submit = SubmitField('确认')
 
     def __init__(self, id, name, *args, **kwargs):
         super(PreChargeForm, self).__init__(*args, **kwargs)
