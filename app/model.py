@@ -223,6 +223,7 @@ class InPatientTableSet(db.Model):
     inpatientcheckid = db.Column(db.String(128))
     inpatientinspectid = db.Column(db.String(128))
     inpatientprescriptid = db.Column(db.String(128))
+    close = db.Column(db.Boolean)
 
 class InPatientTimeAndBed(db.Model):
     __tablename__ = 'inpatienttimeandbed'
