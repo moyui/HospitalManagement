@@ -20,4 +20,4 @@ def getDeposit(id):
         db.session.add(totalCost)
         db.session.commit()
         return redirect(url_for(''))
-    return render_template('changes/deposit.html')
+    return render_template('changes/deposit.html', form=form)
