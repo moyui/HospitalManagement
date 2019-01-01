@@ -6,8 +6,13 @@ class UserGroup(db.Model):
     __tablename__ = 'usergroup'
     id = db.Column(db.Integer, primary_key=True)  # 每个用户记得添加用户组
     name = db.Column(db.String(64))
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> add running
 class UserInfo(db.Model):  # 医生，管理员，院长一张表
     __tablename__ = 'userinfo'
     id = db.Column(db.String(64), primary_key=True)  # 身份证号
@@ -197,6 +202,7 @@ class OpExam(db.Model):
         'opcheckin.id'), primary_key=True)
     examitems = db.Column(db.String(128), db.ForeignKey('examitem.id'))
 
+
 class OpCheck(db.Model):
     __tablename__ = 'opcheck'
     id = db.Column(db.String(10), db.ForeignKey(
@@ -264,6 +270,7 @@ class InPatientTableSet(db.Model):
     inpatientprescriptid = db.Column(db.String(128))
     close = db.Column(db.Boolean)
 
+
 class InPatientTimeAndBed(db.Model):
     __tablename__ = 'inpatienttimeandbed'
     id = db.Column(db.String(64), primary_key=True)
@@ -272,17 +279,20 @@ class InPatientTimeAndBed(db.Model):
     startdate = db.Column(db.Date)
     enddate = db.Column(db.Date)
 
+
 class InPatientCheck(db.Model):
     __tablename__ = 'inpatientcheck'
     id = db.Column(db.String(64), primary_key=True)
     checkitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
 
+
 class InPatientInspect(db.Model):
     __tablename__ = 'inpatientinspect'
     id = db.Column(db.String(64), primary_key=True)
     inspectitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+
 
 class InPatientPrescript(db.Model):
     __tablename__ = 'inpatientprescript'
