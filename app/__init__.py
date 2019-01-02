@@ -20,6 +20,8 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
 
+    from .charges import charges as charges_blueprint
+    app.register_blueprint(charges_blueprint, url_prfix="/charges")
     from .inpatient import inpatient as inpatient_blueprint
     app.register_blueprint(inpatient_blueprint, url_prfix="/inpatient")
 

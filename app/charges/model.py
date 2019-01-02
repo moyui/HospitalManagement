@@ -1,5 +1,3 @@
-from . import db
-
 class InPatientDeposit(db.model):
     __tablename__ = 'inpatientdeposit'
     id = db.Column(db.Integer, primary_key=True)
