@@ -5,11 +5,13 @@
 
 {% block page_content %}
 
-<div>
+<div class="page-header">
     <h3>住院病人信息</h3>
 </div>
-<div>
+{% if nodata %}
+<h6>暂无数据</h6>
+{% endif %}
+<div class="col-md-4">
     {{ wtf.quick_form(form) }}
 </div>
-
 {% endblock %}

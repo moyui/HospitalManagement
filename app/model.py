@@ -242,18 +242,9 @@ class OpRecipeAfford(db.Model):
 
 class InPatientDeposit(db.Model):
     __tablename__ = 'inpatientdeposit'
-    id = db.Column(db.Integer, primary_key=True)
-    patientid = db.Column(db.String(10), db.ForeignKey('opcheckin.id'))
+    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
     rest = db.Column(db.Float)
-
-
-class InPatientTotalCost(db.Model):
-    __tablename__ = 'inpatienttotalcost'
-    id = db.Column(db.Integer, db.ForeignKey(
-        'inpatientdeposit.id'), primary_key=True)
     totalcost = db.Column(db.Float)
-    unpaiditemsid = db.Column(db.String(64))  # 未支付项
-
 
 class InPatientTableSet(db.Model):
     __tablename__ = 'inpatienttableset'
