@@ -37,18 +37,18 @@ def index():
 def depositCheck():
     checkForm = PreChargeCheckForm()
     if request.method == 'GET':
-        return render_template('charges/deposit.html', form=checkForm)
+        return render_template('charges/depositCheck.html', form=checkForm)
     else:
         if checkForm.validate_on_submit():
             formPatientId = checkForm.id.data
             # 查找当前最后一条看病记录
             OpCheckInInfo = OpCheckin.query.filter_by(
-                patientid=formPatientId and jips=True).order_by(OpCheckin.patientid.desc()).first()
+                patientid=formPatientId, jips=True).order_by(OpCheckin.patientid.desc()).first()
             # 如果病人需要住院
             if OpCheckInInfo:
                 return redirect(url_for('.depositPay',  patientid=formPatientId, opcheckid=OpCheckInInfo.id))
             else:
-                return render_template('charges/deposit.html', nodata=True)
+                return render_template('charges/depositCheck.html', nodata=True, form=checkForm)
 
 
 @charges.route('/charges/deposit/pay', methods=['GET', 'POST'])
@@ -57,7 +57,8 @@ def depositPay():
     opCheckInId = request.args.get('opcheckid')
     payForm = PreChargePayForm()
     patientInfo = PatientInfo.query.filter_by(id=patientId).first()
-    depositInfo = InPatientDeposit.query.filter_by(id=opCheckInId)
+    depositInfo = InPatientDeposit.query.filter_by(
+        id=opCheckInId, patientid=patientId).order_by(InPatientDeposit.id.desc()).first()
     if request.method == 'GET':
         payForm.id.data = patientId
         payForm.name.data = patientInfo.name
@@ -65,9 +66,9 @@ def depositPay():
         payForm.sex.data = patientInfo.sex
         # 查看剩余押金数
         if depositInfo:
-            return render_template('charges/deposit.html', rest=depositInfo.rest)
+            return render_template('charges/depositPay.html', rest=depositInfo.rest, form=payForm)
         else:
-            return render_template('charges/deposit.html', rest=0)
+            return render_template('charges/depositPay.html', rest=0, form=payForm)
     else:
         if payForm.validate_on_submit():
             # 查询押金表
@@ -80,8 +81,13 @@ def depositPay():
                 deposit = InPatientDeposit(
                     id=opCheckInId,
                     rest=0,
-                    totalcost=0
+                    totalcost=0,
+                    ischeck=False
                 )
                 db.session.add(deposit)
                 db.session.commit()
+<<<<<<< HEAD
 >>>>>>> add charges
+=======
+            return redirect('')
+>>>>>>> add 住院部分

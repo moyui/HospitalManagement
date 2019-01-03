@@ -12,19 +12,17 @@ class InPatientLoginFrom(FlaskForm):
         DataRequired(), Length(16, 18), Regexp(
             '^[0-9Xx]*$', 0, '身份证必须是数字或者大小写X')
     ])
+    name = StringField('姓名', render_kw={'readonly': True})
+    age = StringField('年龄', render_kw={'readonly': True})
+    sex = StringField('性别', render_kw={'readonly': True})
     submit = SubmitField('查询')
 
-    # def __init__(self, patientid, name, age, sex, nodata, *args, **kwargs):
-    #     super(InPatientLoginFrom, self).__init__(*args, **kwargs)
-    #     if patientid is not None and name is not None and age is not None and sex is not None:
-    #         self.patientid = patientid
-    #         self.name = name
-    #         self.age = age
-    #         self.sex = sex
+class InPatientTableSetFrom(FlaskForm):
+    id = StringField('身份证', render_kw={'readonly': True})
+    submit = SubmitField('创建')
 
 
-
-class InPatientTimeForm(FlaskForm):
+class InPatientBedForm(FlaskForm):
     startDate = DateField('开始日期')
     endDate = DateField('结束日期')
     bedId = StringField('床号')

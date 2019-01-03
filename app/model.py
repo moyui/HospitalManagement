@@ -125,6 +125,7 @@ class BedInfo(db.Model):
     __tablename__ = 'bedinfo'
     id = db.Column(db.Integer, primary_key=True)
     areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
+    isused = db.Column(db.Boolean)
 
 
 class Price(db.Model):
@@ -248,24 +249,27 @@ class OpRecipeAfford(db.Model):
 class InPatientDeposit(db.Model):
     __tablename__ = 'inpatientdeposit'
     id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
+    patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'), primary_key=True)
     rest = db.Column(db.Float)
     totalcost = db.Column(db.Float)
+    ischeck = db.Column(db.Boolean)
 
 class InPatientTableSet(db.Model):
     __tablename__ = 'inpatienttableset'
-    id = db.Column(db.Integer, db.ForeignKey(
+    id = db.Column(db.String(10), db.ForeignKey(
         'inpatientdeposit.id'), primary_key=True)
     inpatienttimeandbedid = db.Column(db.String(128))
     inpatientcheckid = db.Column(db.String(128))
     inpatientinspectid = db.Column(db.String(128))
     inpatientprescriptid = db.Column(db.String(128))
-    close = db.Column(db.Boolean)
 
 
 class InPatientTimeAndBed(db.Model):
     __tablename__ = 'inpatienttimeandbed'
     id = db.Column(db.String(64), primary_key=True)
-    badid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))  # 待填写
+    tableid = db.Column(db.String(10), db.ForeignKey(
+        'inpatienttableset.id'))
+    badid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     startdate = db.Column(db.Date)
     enddate = db.Column(db.Date)
@@ -274,6 +278,8 @@ class InPatientTimeAndBed(db.Model):
 class InPatientCheck(db.Model):
     __tablename__ = 'inpatientcheck'
     id = db.Column(db.String(64), primary_key=True)
+    tableid = db.Column(db.String(10), db.ForeignKey(
+        'inpatienttableset.id'))
     checkitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
 
@@ -281,6 +287,8 @@ class InPatientCheck(db.Model):
 class InPatientInspect(db.Model):
     __tablename__ = 'inpatientinspect'
     id = db.Column(db.String(64), primary_key=True)
+    tableid = db.Column(db.String(10), db.ForeignKey(
+        'inpatienttableset.id'))
     inspectitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
 
@@ -288,5 +296,7 @@ class InPatientInspect(db.Model):
 class InPatientPrescript(db.Model):
     __tablename__ = 'inpatientprescript'
     id = db.Column(db.String(64), primary_key=True)
+    tableid = db.Column(db.String(10), db.ForeignKey(
+        'inpatienttableset.id'))
     prescriptitemsid = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
