@@ -22,9 +22,13 @@ class InPatientTableSetFrom(FlaskForm):
     submit = SubmitField('创建')
 
 
-class InPatientBedForm(FlaskForm):
-    startDate = DateField('开始日期')
+class InPatientCloseBedForm(FlaskForm):
+    bedId = StringField('床号', render_kw={'readonly': True})
+    startDate = DateField('开始日期', render_kw={'readonly': True})
     endDate = DateField('结束日期')
+    submit = SubmitField('结束病床')
+
+class InPatientNewBedForm(FlaskForm):
     bedId = StringField('床号')
     submit = SubmitField('提交')
 
