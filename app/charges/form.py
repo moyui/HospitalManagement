@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectField, PasswordField, ValidationError
 from wtforms.validators import DataRequired, Length, Regexp, EqualTo
-from ..model import InPatientDeposit, InPatientTotalCost
+
 
 class PreChargeCheckForm(FlaskForm):
     id = StringField('身份证')
     submit = SubmitField('确认')
+
 
 class PreChargePayForm(FlaskForm):
     id = StringField('身份证', render_kw={'readonly': True})
