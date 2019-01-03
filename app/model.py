@@ -264,7 +264,7 @@ class InPatientTimeAndBed(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     tableid = db.Column(db.String(10), db.ForeignKey(
         'inpatienttableset.id'))
-    badid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))
+    bedid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     startdate = db.Column(db.Date)
     enddate = db.Column(db.Date)

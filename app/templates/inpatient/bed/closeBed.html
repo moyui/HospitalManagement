@@ -6,7 +6,7 @@
 {% block page_content %}
 
 <div>
-    <h3>添加床位与住院时间信息</h3>
+    <h3>终止病床</h3>
 </div>
 <div>
     <h4>你的床位</h4>
@@ -17,13 +17,8 @@
     {% elif %}
     {% endif %}
 </div>
-<div>
-    <ul>
-        {% if not myBed.enddate %}
-        <li><a href="{{url_for(inpatient.closeBed, patientid=patientid, id=id)}}">终止病床</a></li>
-        {% endif %}
-        <li><a href="{{url_for(inpatient.newBed, patientid=patientid, id=id)}}">新建病床</a></li>
-    </ul>
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
 </div>
 
 {% endblock %}
