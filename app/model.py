@@ -122,7 +122,6 @@ class BedInfo(db.Model):
     isused = db.Column(db.Boolean)
 
 
-
 class Price(db.Model):
     __tablename__ = 'price'
     id = db.Column(db.String(20), primary_key=True)

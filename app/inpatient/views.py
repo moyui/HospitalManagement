@@ -87,42 +87,6 @@ def closeBed():
         myBed.update({
             'enddate': form.endDate.data
         })
-        return redirect('/inpatient/<id>')
-
-
-@inpatient.route('/inpatient', methods=['GET', 'POST'])
-def index():
-    form = InPatientLoginFrom()
-    if request.method == 'GET':
-        return render_template('inpatient/login.html', form=form)
-    else:
-        formPatientid = form.patientid.data
-        if formPatientid is not None:
-            inPatientInfo = PatientInfo.query.filter_by(
-                id=formPatientid).first()
-            name = inPatientInfo.name
-            age = inPatientInfo.age
-            sex = inPatientInfo.sex
-
-            return render_template('inpatient/login.html', form=form, patientid=formPatientid, age=age, name=name, sex=sex)
-        else:
-            return render_template('inpatient/login.html', nodata=true)
-
-
-@inpatient.route('/inpatient/<id>/bed', methods=['GET', 'POST'])
-def bed():
-    form = InPatientTimeAndBed()
-    if request.method == 'GET':
-        return render_template('inpatient/bed.html', form=form)
-    else:
-        bedTableid = InPatientTableSet.query.filter_by(
-            id=id).first().inpatienttimeandbedid
-        InPatientTimeAndBed.query.filter_by(id=bedTableid).first().update({
-            'badid': form.data.badId,
-            'startdate': form.data.startDate,
-            'enddate': form.data.endDate
-        })
-        return redirect('/inpatient/<id>')
         bedtable = BedInfo.filter_by(id=myBed.bedid).first()
         bedtable.update({
             'isused': False
