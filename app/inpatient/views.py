@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, url_for, flash
 from . import inpatient
-from .form import InPatientLoginFrom, InPatientTableSetFrom, InPatientCloseBedForm, InPatientCloseBedForm, InPatientNewBedForm
+from .form import InPatientLoginFrom, InPatientTableSetFrom, InPatientCloseBedForm, InPatientCloseBedForm, InPatientNewBedForm, InPatientInspectForm, InPatientCheckForm, InpatientPrescriptForm
 from ..model import InPatientCheck, InPatientInspect, InPatientPrescript, InPatientTableSet, InPatientTimeAndBed, PatientInfo, InPatientDeposit, BedInfo
 from .. import db
 import datetime
@@ -124,4 +124,64 @@ def newBed():
         bedtable.update({
             'isused': True
         })
+        return redirect('')
+
+@inpatient.route('/inaptient/check')
+def check():
+    patientid = request.args.get('patientid')
+    id = request.args.get('id')
+    form = InPatientCheckForm()
+    if request.method == 'GET':
+        form.opid.data = id
+        return render_template('inpatient/ex.html', form=form)
+    else:
+        if form.validate_on_submit():
+            check = InPatientCheck(
+                id='',
+                tableid=id,
+                checkitemsid=','.join(form.checkitems.data)
+                doctorinfoid=''
+            )
+            db.session.add(check)
+            db.session.commit()
+        return redirect('')
+
+@inpatient.route('/inaptient/inspect')
+def inspect():
+    patientid = request.args.get('patientid')
+    id = request.args.get('id')
+    form = InPatientInspectForm()
+    if request.method == 'GET':
+        form.opid.data = id
+        return render_template('inpatient/ex.html', form=form)
+    else:
+        if form.validate_on_submit():
+            check = InPatientInspect(
+                id='',
+                tableid=id,
+                inspectitemsid=','.join(form.examitems.data)
+                doctorinfoid=''
+            )
+            db.session.add(check)
+            db.session.commit()
+        return redirect('')
+
+@inpatient.route('/inaptient/prescript')
+def prescript():
+    patientid = request.args.get('patientid')
+    id = request.args.get('id')
+    form = InpatientPrescriptForm()
+    if request.method == 'GET':
+        form.opid.data = id
+        return render_template('inpatient/ex.html', form=form)
+    else:
+        if form.validate_on_submit():
+            check = InPatientPrescript(
+                id='',
+                tableid=id,
+                prescriptitemsid=','.join(form.examitems.data)
+                doctorinfoid=''
+            )
+            db.session.add(check)
+            db.session.commit()
         return redirect('')
