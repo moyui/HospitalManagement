@@ -125,5 +125,3 @@ def newBed():
             'isused': True
         })
         return redirect('')
-
-
