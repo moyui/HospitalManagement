@@ -4,29 +4,25 @@ from .form import PreChargeCheckForm, PreChargePayForm
 from ..model import InPatientDeposit, PatientInfo, OpCheckin
 from .. import db
 
-<<<<<<< HEAD
+
 @charges.route('/charges/deposit/<id>', methods=['GET', 'POST'])
 def getDeposit(id):
     form = PreChargeForm()
     if form.validate_on_submit():
         deposit = InPatientDeposit(
-            patientid = id,
-            rest = form.precharge.data
+            patientid=id,
+            rest=form.precharge.data
         )
         totalCost = InPatientTotalCost(
-            patientid = id,
-            totalcost = 0
+            patientid=id,
+            totalcost=0
         )
         db.session.add(deposit)
         db.session.add(totalCost)
         db.session.commit()
         return redirect(url_for(''))
     return render_template('changes/deposit.html', form=form)
-<<<<<<< HEAD
 
-=======
->>>>>>> add:增加部分住院代码
-=======
 
 @charges.route('/charges', methods=['GET', 'POST'])
 def index():
@@ -86,8 +82,4 @@ def depositPay():
                 )
                 db.session.add(deposit)
                 db.session.commit()
-<<<<<<< HEAD
->>>>>>> add charges
-=======
             return redirect('')
->>>>>>> add 住院部分

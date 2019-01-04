@@ -1,19 +1,7 @@
 from flask import render_template, redirect, request, url_for, flash
 from . import inpatient
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-from .form import InPatientLoginFrom, InPatientTimeAndBed
-from ..model import InPatientCheck, InPatientInspect, InPatientPrescript, InPatientTableSet, InPatientTimeAndBed, PatientInfo
-=======
-from .form import InPatientLoginFrom, InPatientTableSetFrom, InPatientBedForm
-=======
 from .form import InPatientLoginFrom, InPatientTableSetFrom, InPatientCloseBedForm, InPatientCloseBedForm, InPatientNewBedForm
->>>>>>> 床位部分解决
 from ..model import InPatientCheck, InPatientInspect, InPatientPrescript, InPatientTableSet, InPatientTimeAndBed, PatientInfo, InPatientDeposit, BedInfo
->>>>>>> add 住院部分
 from .. import db
 import datetime
 
@@ -99,19 +87,7 @@ def closeBed():
         myBed.update({
             'enddate': form.endDate.data
         })
-<<<<<<< HEAD
         return redirect('/inpatient/<id>')
-=======
-from .form import PreChargeForm
-from .model import InPatientCheck, InPatientInspect, InPatientPrescript, InPatientTableSet, InPatientTimeAndBed
-=======
-from .form import InPatientLoginFrom
-=======
-from .form import InPatientLoginFrom, InPatientTimeAndBed
->>>>>>> add running
-from ..model import InPatientCheck, InPatientInspect, InPatientPrescript, InPatientTableSet, InPatientTimeAndBed, PatientInfo
->>>>>>> add:增加部分住院代码
-from .. import db
 
 
 @inpatient.route('/inpatient', methods=['GET', 'POST'])
@@ -133,13 +109,6 @@ def index():
             return render_template('inpatient/login.html', nodata=true)
 
 
-<<<<<<< HEAD
-
-    inPatient = InPatientTableSet.query.filter_by(patientid=patientid and close=False).first()
-    if inpatient is not None:
-        return redirect
->>>>>>> add:住院收费与住院部分开发
-=======
 @inpatient.route('/inpatient/<id>/bed', methods=['GET', 'POST'])
 def bed():
     form = InPatientTimeAndBed()
@@ -154,11 +123,6 @@ def bed():
             'enddate': form.data.endDate
         })
         return redirect('/inpatient/<id>')
-<<<<<<< HEAD
->>>>>>> add:增加部分住院代码
-=======
->>>>>>> add running
-=======
         bedtable = BedInfo.filter_by(id=myBed.bedid).first()
         bedtable.update({
             'isused': False
@@ -197,6 +161,3 @@ def newBed():
             'isused': True
         })
         return redirect('')
-
-
->>>>>>> 床位部分解决

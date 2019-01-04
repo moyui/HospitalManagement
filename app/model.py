@@ -6,13 +6,7 @@ class UserGroup(db.Model):
     __tablename__ = 'usergroup'
     id = db.Column(db.Integer, primary_key=True)  # 每个用户记得添加用户组
     name = db.Column(db.String(64))
-<<<<<<< HEAD
 
-
-=======
-
-
->>>>>>> add running
 class UserInfo(db.Model):  # 医生，管理员，院长一张表
     __tablename__ = 'userinfo'
     id = db.Column(db.String(64), primary_key=True)  # 身份证号
