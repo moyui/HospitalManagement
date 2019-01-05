@@ -139,7 +139,7 @@ def check():
             check = InPatientCheck(
                 id='',
                 tableid=id,
-                checkitemsid=','.join(form.checkitems.data)
+                checkitemsid=','.join(form.checkitems.data),
                 doctorinfoid=''
             )
             db.session.add(check)
@@ -159,7 +159,7 @@ def inspect():
             check = InPatientInspect(
                 id='',
                 tableid=id,
-                inspectitemsid=','.join(form.examitems.data)
+                inspectitemsid=','.join(form.examitems.data),
                 doctorinfoid=''
             )
             db.session.add(check)
@@ -179,7 +179,7 @@ def prescript():
             check = InPatientPrescript(
                 id='',
                 tableid=id,
-                prescriptitemsid=','.join(form.examitems.data)
+                prescriptitemsid=','.join(form.examitems.data),
                 doctorinfoid=''
             )
             db.session.add(check)
