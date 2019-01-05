@@ -1,4 +1,5 @@
 {% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}医院信息管理系统{% endblock %}
 
@@ -23,6 +24,12 @@
                 <li><a href="{{ url_for('charges.index')}}">收费模块</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                {% if name %}
+                <li>您好，{{name}}医生</li>
+                <li>wtf.quick_form(form)</li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

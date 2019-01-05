@@ -99,6 +99,7 @@ def newBed():
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientNewBedForm()
+    doctorid = request.cookies.get('doctorid')
     remainBed = BedInfo.query.filter_by(isused=False).all()
     if request.method == 'GET':
         return render_template('inpatient/bed/newBed.html', form=form, remainBed=remainBed)
@@ -107,7 +108,7 @@ def newBed():
             id='',  # 自增字段
             tableid=id,
             bedid=form.bedId.data,
-            doctorinfoid='',  # cookie登录态
+            doctorinfoid=doctorid,  # cookie登录态
             startdate=datetime.datetime.now(),
             enddate=None
         )
@@ -126,11 +127,13 @@ def newBed():
         })
         return redirect('')
 
+
 @inpatient.route('/inaptient/check')
 def check():
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientCheckForm()
+    doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
         form.opid.data = id
         return render_template('inpatient/ex.html', form=form)
@@ -140,17 +143,19 @@ def check():
                 id='',
                 tableid=id,
                 checkitemsid=','.join(form.checkitems.data),
-                doctorinfoid=''
+                doctorinfoid=doctorid
             )
             db.session.add(check)
             db.session.commit()
         return redirect('')
+
 
 @inpatient.route('/inaptient/inspect')
 def inspect():
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientInspectForm()
+    doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
         form.opid.data = id
         return render_template('inpatient/ex.html', form=form)
@@ -160,17 +165,19 @@ def inspect():
                 id='',
                 tableid=id,
                 inspectitemsid=','.join(form.examitems.data),
-                doctorinfoid=''
+                doctorinfoid=doctorid
             )
             db.session.add(check)
             db.session.commit()
         return redirect('')
+
 
 @inpatient.route('/inaptient/prescript')
 def prescript():
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InpatientPrescriptForm()
+    doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
         form.opid.data = id
         return render_template('inpatient/ex.html', form=form)
@@ -180,7 +187,7 @@ def prescript():
                 id='',
                 tableid=id,
                 prescriptitemsid=','.join(form.examitems.data),
-                doctorinfoid=''
+                doctorinfoid=doctorid
             )
             db.session.add(check)
             db.session.commit()
