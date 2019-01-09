@@ -1,6 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash
-from flask_login import login_user, logout_user, login_required, \
-    current_user
+from flask import render_template, redirect, request, url_for, flash, make_response
 from . import auth
 from .form import LoginForm, RegisterFrom
 from ..model import UserInfo
@@ -9,19 +7,21 @@ from .. import db
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(id=form.id.data).first()
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user)
-            next = request.args.get('next')
-            if next is None or next.startswith('/'):
-                next = url_for('main.index')
-            
-            return redirect(next)
-        flash('无效的用户名或密码。')
+    if request.method == 'GET':
+        return render_template('auth/login.html', form=form)
+    else:
+        if form.validate_on_submit():
+            user = UserInfo.query.filter_by(id=form.id.data).first()
+            if user:
+                response = make_response('setCookie')
+                response.setCookie('doctorid', user.id)
+                response.setCookie('doctorname', user.name)
+                redirect('/')
+            else:
+                return render_template('auth/login.html', form=form, nodata=True)
     return render_template('auth/login.html', form=form)
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST']) #这块代码暂时放弃
 def register():
     form = RegisterFrom()
     if form.validate_on_submit():

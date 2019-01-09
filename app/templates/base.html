@@ -1,6 +1,7 @@
 {% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Flasky{% endblock %}
+{% block title %}医院信息管理系统{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -15,28 +16,32 @@
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle"
-            data-toggle="collapse" data-taget=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand">Flasky</a>
+            <a class="navbar-brand">医院信息管理系统</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('inpatient.index')}}">住院模块</a></li>
+                <li><a href="{{ url_for('charges.index')}}">收费模块</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if name %}
+                <li>您好，{{name}}医生</li>
+                <li>wtf.quick_form(form)</li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
-    {% endfor %}
-    
+<div class="container">    
     {% block page_content %}{% endblock %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
 {% endblock %}
