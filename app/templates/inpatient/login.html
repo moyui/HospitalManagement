@@ -5,11 +5,17 @@
 
 {% block page_content %}
 
-<div>
+<div class="page-header">
     <h3>住院病人信息</h3>
 </div>
-<div>
+{% if nodata %}
+<h6>找不到对应病人的数据</h6>
+{% endif %}
+<div class="col-md-4">
     {{ wtf.quick_form(form) }}
 </div>
+{% if patientid and id %}
+    <a href="{{url_for('inpatient.patientList', patientid=patientid, id=id)}}">下一步</a>
+{% endif %}
 
 {% endblock %}

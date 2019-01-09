@@ -1,0 +1,29 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky -  床位与住院时间信息{% endblock %}
+
+{% block page_content %}
+
+<div>
+    <h3>添加床位与住院时间信息</h3>
+</div>
+<div>
+    <h4>你的床位</h4>
+    {% if myBed %}
+        <p>床号：{{myBed.bedid}}<p>
+        <p>开始日期：{{myBed.startdate}}</p>
+        <p>结束日期：{{myBed.enddate}}</p>
+    {% elif %}
+    {% endif %}
+</div>
+<div>
+    <ul>
+        {% if not myBed.enddate %}
+        <li><a href="{{url_for(inpatient.closeBed, patientid=patientid, id=id)}}">终止病床</a></li>
+        {% endif %}
+        <li><a href="{{url_for(inpatient.newBed, patientid=patientid, id=id)}}">新建病床</a></li>
+    </ul>
+</div>
+
+{% endblock %} 
