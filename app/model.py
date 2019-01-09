@@ -7,6 +7,7 @@ class UserGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # 每个用户记得添加用户组
     name = db.Column(db.String(64))
 
+
 class UserInfo(db.Model):  # 医生，管理员，院长一张表
     __tablename__ = 'userinfo'
     id = db.Column(db.String(64), primary_key=True)  # 身份证号
@@ -42,28 +43,34 @@ class PatientInfo(db.Model):
     sex = db.Column(db.Integer)  # 1-男 0-女
     age = db.Column(db.Integer)
 
+class DoctorTimetable(db.Model):
+    __tablename__ = 'doctortimetable'
+    id = db.Column(db.String(64), primary_key=True)
+    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    doctortime = db.Column(db.Integer)
+
 # 医生轮作
 
 
-class DoctorCycle(db.Model):
-    __tablename__ = 'doctorcycle'
-    id = db.Column(db.Integer, primary_key=True)
-    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    classid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
+# class DoctorCycle(db.Model):
+#     __tablename__ = 'doctorcycle'
+#     id = db.Column(db.Integer, primary_key=True)
+#     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+#     classid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
 
 
-class OutPatientTimetable(db.Model):
-    __tablename__ = 'outpatienttimetable'
-    id = db.Column(db.Integer, primary_key=True)
-    doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
-    date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
+# class OutPatientTimetable(db.Model):
+#     __tablename__ = 'outpatienttimetable'
+#     id = db.Column(db.Integer, primary_key=True)
+#     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
+#     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
 
 
-class InPatientTimetable(db.Model):
-    __tablename__ = 'inpatienttimetable'
-    id = db.Column(db.Integer, primary_key=True)
-    userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    date = db.Column(db.String(128))
+# class InPatientTimetable(db.Model):
+#     __tablename__ = 'inpatienttimetable'
+#     id = db.Column(db.Integer, primary_key=True)
+#     userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+#     date = db.Column(db.String(128))
 
 # 缺少急诊
 
@@ -73,12 +80,12 @@ class ExpertsTimetable(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     cid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
-    date = db.Column(db.String(128))
+    date = db.Column(db.Integer)
 
 
 class Medicine(db.Model):
     __tablename__ = 'medicine'
-    id = db.Column(db.Integer, primary_key=True)  # 6位，1开头，自增
+    id = db.Column(db.String(128), primary_key=True)  # 6位，1开头，自增
     medicineclass = db.Column(db.Integer)  # 药品类别， 0代表中药， 1代表西药
     medicinename = db.Column(db.String(128))
 
@@ -106,7 +113,7 @@ class ExamItem(db.Model):
     __tablename__ = 'examitem'
     id = db.Column(db.String(128), primary_key=True)
     examitemname = db.Column(db.String(64))
-    itemclass = db.Column(db.Integer, db.ForeignKey('checkclass.id'))
+    itemclass = db.Column(db.Integer, db.ForeignKey('examclass.id'))
 
 
 class InhospitalArea(db.Model):
@@ -119,7 +126,6 @@ class BedInfo(db.Model):
     __tablename__ = 'bedinfo'
     id = db.Column(db.Integer, primary_key=True)
     areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
-    isused = db.Column(db.Boolean)
 
 
 class Price(db.Model):
@@ -182,115 +188,132 @@ class Price(db.Model):
 
 class OpCheckin(db.Model):
     __tablename__ = 'opcheckin'
-    id = db.Column(db.String(10), primary_key=True)
-    patientid = db.Column(db.String(10), db.ForeignKey('patientinfo.id'))
+    opcheckinid = db.Column(db.Integer, primary_key= True)
+    patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
     doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
-    doctime = db.Column(db.Integer, db.ForeignKey('outpatienttimetable.id'))
-    experttime = db.Column(db.Integer, db.ForeignKey('expertstimetable.id'))
+    doctortype = db.Column(db.Integer)
     # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
     jips = db.Column(db.Boolean)
 
 
 class OpExam(db.Model):
     __tablename__ = 'opexam'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
-    examitems = db.Column(db.String(128), db.ForeignKey('examitem.id'))
-
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
+    examitems = db.Column(db.String(128))
 
 class OpCheck(db.Model):
     __tablename__ = 'opcheck'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
-    checkitems = db.Column(db.String(128), db.ForeignKey('checkitem.id'))
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
+    checkitems = db.Column(db.String(128))
 
 
 class OpRecipe(db.Model):
     __tablename__ = 'oprecipe'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
     medicinenames = db.Column(db.String(128))
+    medicinenumbers = db.Column(db.String(128))
 
 
 class OpCheckinAfford(db.Model):
     __tablename__ = 'opcheckinafford'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
     price = db.Column(db.Float)
 
 
 class OpExamAfford(db.Model):
     __tablename__ = 'opexamafford'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
     price = db.Column(db.Float)
 
 
 class OpCheckAfford(db.Model):
     __tablename__ = 'opcheckafford'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
     price = db.Column(db.Float)
 
 
 class OpRecipeAfford(db.Model):
     __tablename__ = 'oprecipeafford'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'opcheckin.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key= True)
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
+    opid = db.Column(db.String(64), db.ForeignKey(
+        'opcheckin.patientid'))
     price = db.Column(db.Float)
 
+class OpCost(db.Model):
+    __tablename__ = 'opcost'
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'), primary_key= True)
+    cost = db.Column(db.Float)
 
-class InPatientDeposit(db.Model):
-    __tablename__ = 'inpatientdeposit'
-    id = db.Column(db.String(10), db.ForeignKey('opcheckin.id'), primary_key=True)
-    patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'), primary_key=True)
-    rest = db.Column(db.Float)
-    totalcost = db.Column(db.Float)
-    ischeck = db.Column(db.Boolean)
-
-class InPatientTableSet(db.Model):
-    __tablename__ = 'inpatienttableset'
-    id = db.Column(db.String(10), db.ForeignKey(
-        'inpatientdeposit.id'), primary_key=True)
-    inpatienttimeandbedid = db.Column(db.String(128))
-    inpatientcheckid = db.Column(db.String(128))
-    inpatientinspectid = db.Column(db.String(128))
-    inpatientprescriptid = db.Column(db.String(128))
+# class InPatientDeposit(db.Model):
+#     __tablename__ = 'inpatientdeposit'
+#     id = db.Column(db.Integer, primary_key=True)
+#     patientid = db.Column(db.String(10), db.ForeignKey('opcheckin.id'))
+#     rest = db.Column(db.Float)
 
 
-class InPatientTimeAndBed(db.Model):
-    __tablename__ = 'inpatienttimeandbed'
-    id = db.Column(db.String(64), primary_key=True)
-    tableid = db.Column(db.String(10), db.ForeignKey(
-        'inpatienttableset.id'))
-    bedid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    startdate = db.Column(db.Date)
-    enddate = db.Column(db.Date)
+# class InPatientTotalCost(db.Model):
+#     __tablename__ = 'inpatienttotalcost'
+#     id = db.Column(db.Integer, db.ForeignKey(
+#         'inpatientdeposit.id'), primary_key=True)
+#     totalcost = db.Column(db.Float)
+#     unpaiditemsid = db.Column(db.String(64))  # 未支付项
 
 
-class InPatientCheck(db.Model):
-    __tablename__ = 'inpatientcheck'
-    id = db.Column(db.String(64), primary_key=True)
-    tableid = db.Column(db.String(10), db.ForeignKey(
-        'inpatienttableset.id'))
-    checkitemsid = db.Column(db.String(128))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+# class InPatientTableSet(db.Model):
+#     __tablename__ = 'inpatienttableset'
+#     id = db.Column(db.Integer, db.ForeignKey(
+#         'inpatientdeposit.id'), primary_key=True)
+#     inpatienttimeandbedid = db.Column(db.String(128))
+#     inpatientcheckid = db.Column(db.String(128))
+#     inpatientinspectid = db.Column(db.String(128))
+#     inpatientprescriptid = db.Column(db.String(128))
+#     close = db.Column(db.Boolean)
 
 
-class InPatientInspect(db.Model):
-    __tablename__ = 'inpatientinspect'
-    id = db.Column(db.String(64), primary_key=True)
-    tableid = db.Column(db.String(10), db.ForeignKey(
-        'inpatienttableset.id'))
-    inspectitemsid = db.Column(db.String(128))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+# class InPatientTimeAndBed(db.Model):
+#     __tablename__ = 'inpatienttimeandbed'
+#     id = db.Column(db.String(64), primary_key=True)
+#     badid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))  # 待填写
+#     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+#     startdate = db.Column(db.Date)
+#     enddate = db.Column(db.Date)
 
 
-class InPatientPrescript(db.Model):
-    __tablename__ = 'inpatientprescript'
-    id = db.Column(db.String(64), primary_key=True)
-    tableid = db.Column(db.String(10), db.ForeignKey(
-        'inpatienttableset.id'))
-    prescriptitemsid = db.Column(db.String(128))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+# class InPatientCheck(db.Model):
+#     __tablename__ = 'inpatientcheck'
+#     id = db.Column(db.String(64), primary_key=True)
+#     checkitemsid = db.Column(db.String(128))
+#     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+
+
+# class InPatientInspect(db.Model):
+#     __tablename__ = 'inpatientinspect'
+#     id = db.Column(db.String(64), primary_key=True)
+#     inspectitemsid = db.Column(db.String(128))
+#     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+
+
+# class InPatientPrescript(db.Model):
+#     __tablename__ = 'inpatientprescript'
+#     id = db.Column(db.String(64), primary_key=True)
+#     prescriptitemsid = db.Column(db.String(128))
+#     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))

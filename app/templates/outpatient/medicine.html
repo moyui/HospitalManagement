@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 门诊处方 {% endblock %}
+
+{% block page_content %}
+
+<div>
+    <h3>药品</h3>
+</div>
+<div>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
