@@ -80,4 +80,3 @@ class InpatientPrescriptForm(FlaskForm):
             medicinenum.append(i+1)
         zipped = zip(medicinenum, medicinelist)
         self.medicineitems.choices = zipped
-

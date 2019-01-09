@@ -1,7 +1,7 @@
 {% extends "base.html"%}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Flasky -  住院病人信息套表{% endblock %}
+{% block title %}Flasky -  住院病人信息套表{% endblock %}
 
 {% block page_content %}
 
@@ -43,4 +43,4 @@
 {% if patientid and id %}
     <a href="{{url_for('inpatient.patientList', patientid=patientid, id=id)}}">下一步</a>
 {% endif %}
-{% endblock %}
+{% endblock %} 
