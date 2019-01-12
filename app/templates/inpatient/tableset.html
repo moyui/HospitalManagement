@@ -20,7 +20,11 @@
         <ul>
             {% if check %}
                 {% for item in check %}
-                <li>检查项目：{{item.checkitemsid}} 开具医生：{{item.doctorinfo.id}}</li>
+                <li>检查单号：{{item.id}} 开具医生：{{item.doctorname}} 开具项目：
+                    {% for j in item.name %}
+                        {{j}},
+                    {% endfor %}
+                </li>
                 {% endfor %}
             {% else %}
             <li>暂无该项目</li>
@@ -32,7 +36,11 @@
         <ul>
             {% if inspect %}
                 {% for item in inspect %}
-                <li>检验项目：{{item.inspectitemsid}} 开具医生：{{item.doctorinfo.id}}</li>
+                <li>检验单号：{{item.id}} 开具医生：{{item.doctorname}} 开具项目：
+                        {% for j in item.name %}
+                            {{j}},
+                        {% endfor %}
+                </li>
                 {% endfor %}
             {% else %}
             <li>暂无该项目</li>
@@ -44,7 +52,24 @@
         <ul>
             {% if persect %}
                 {% for item in persect %}
-                <li>处方：{{item.prescriptitemsid}} 开具医生：{{item.doctorinfo.id}}</li>
+                <li>检查单号：{{item.id}} 开具医生：{{item.doctorname}} 开具项目：
+                        {% for j in item.name %}
+                            {{j}}
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            {% else %}
+            <li>暂无该项目</li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
+        <h4>病床</h4>
+        <ul>
+            {% if bed %}
+                {% for item in bed %}
+                <li>单号：{{item.id}} 开具医生：{{item.doctorname}} 床号：{{item.bedif}} 开始日期{{item.startdate}} 结束日期：{{item.enddate}}
+                    </li>
                 {% endfor %}
             {% else %}
             <li>暂无该项目</li>

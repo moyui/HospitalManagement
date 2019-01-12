@@ -1,7 +1,7 @@
 
 from flask import render_template, redirect, request, url_for, flash
 from . import charges
-from .form import PreChargeCheckForm, PreChargePayForm
+from .form import PreChargeCheckForm, PreChargePayForm, PreChargeLoginFrom
 from ..model import InPatientDeposit, PatientInfo, OpCheckin
 from .. import db
 from ..decorator import is_login
@@ -72,3 +72,29 @@ def depositPay(name):
                 db.session.commit()
             flash('金额充值成功')
             return redirect(url_for('.depositPay',  patientid=patientId, opcheckid=opCheckInId))
+
+@charges.route('/charges/pay/check', methods=['GET', 'POST'])
+@is_login
+def payCheck(name):
+    
+
+
+
+@charges.route('/charges/', methods=['GET', 'POST'])
+@is_login
+def depositCheck(name):
+    checkForm = PreChargeCheckForm()
+    if request.method == 'GET':
+        return render_template('charges/depositCheck.html', form=checkForm, name=name)
+    else:
+        if checkForm.validate_on_submit():
+            formPatientId = checkForm.id.data
+            # 查找当前最后一条看病记录
+            OpCheckInInfo = OpCheckin.query.filter_by(
+                patientid=formPatientId, jips=True).order_by(OpCheckin.patientid.desc()).first()
+            # 如果病人需要住院
+            if OpCheckInInfo:
+                return redirect(url_for('.depositPay',  patientid=formPatientId, opcheckid=OpCheckInInfo.opcheckinid))
+            else:
+                flash('查找不到该病人')
+                return render_template('charges/depositCheck.html', form=checkForm, name=name)
