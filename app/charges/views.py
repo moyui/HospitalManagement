@@ -104,10 +104,6 @@ def payReal(name):
         checkInfo = InPatientCheck.query.filter_by(tableid=id).all()
         inspectInfo = InPatientInspect.query.filter_by(tableid=id).all()
         prespectInfo = InPatientPrescript.query.filter_by(tableid=id).all()
-        checkItems = []
-        inspectItems = []
-        prespecItems = []
-        bedItems = []
         count = 0
         for i in checkInfo:
             count = count + float(i.cost)

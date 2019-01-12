@@ -296,6 +296,8 @@ def recipenum(name):
         mednumbers = []
         d = request.values.to_dict()
         for num in d.keys():
+            if num ==  'patientid' or num == 'id':
+                break
             mednumbers.append(d.get(num))
         medicineInfo.medicinenumbers = ','.join(mednumbers)
 
