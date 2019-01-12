@@ -1,3 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint
 
-db = SQLAlchemy()
+familydoctor = Blueprint('familydoctor', __name__)  # 设定蓝本的名称
+
+from .import views

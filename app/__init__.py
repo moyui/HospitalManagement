@@ -40,5 +40,8 @@ def create_app(config_name):
     app.register_blueprint(outpatient_blueprint, url_prfix="/outpatient")
     from .imgpatient import imgpatient as imgpatient_blueprint
     app.register_blueprint(imgpatient_blueprint, url_prfix="/imgpatient")
+    from .familydoctor import familydoctor as familydoctor_blueprint
+    app.register_blueprint(familydoctor_blueprint, url_prfix="/familydoctor")
+
 
     return app

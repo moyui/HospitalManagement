@@ -43,6 +43,16 @@ class PatientInfo(db.Model):
     sex = db.Column(db.Integer)  # 1-男 0-女
     age = db.Column(db.Integer)
 
+<<<<<<< Updated upstream
+=======
+class DoctorTimetable(db.Model):
+    __tablename__ = 'doctortimetable'
+    id = db.Column(db.String(64), primary_key=True)
+    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    doctortime = db.Column(db.Integer)
+
+# 医生轮作
+>>>>>>> Stashed changes
 
 class DoctorTimetable(db.Model):
     __tablename__ = 'doctortimetable'
@@ -50,14 +60,30 @@ class DoctorTimetable(db.Model):
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
 
+<<<<<<< Updated upstream
 class ImgDoctorTimetable(db.Model):
     __tablename__ = 'imgdoctortimetable'
     id = db.Column(db.String(64), primary_key=True)
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
+=======
+# class DoctorCycle(db.Model):
+#     __tablename__ = 'doctorcycle'
+#     id = db.Column(db.Integer, primary_key=True)
+#     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+#     classid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
+>>>>>>> Stashed changes
 
 # 医生轮作
 
+<<<<<<< Updated upstream
+=======
+# class OutPatientTimetable(db.Model):
+#     __tablename__ = 'outpatienttimetable'
+#     id = db.Column(db.Integer, primary_key=True)
+#     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
+#     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
+>>>>>>> Stashed changes
 
 # class DoctorCycle(db.Model):
 #     __tablename__ = 'doctorcycle'
@@ -72,7 +98,10 @@ class ImgDoctorTimetable(db.Model):
 #     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
 #     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 # class InPatientTimetable(db.Model):
 #     __tablename__ = 'inpatienttimetable'
 #     id = db.Column(db.Integer, primary_key=True)
@@ -133,7 +162,6 @@ class BedInfo(db.Model):
     __tablename__ = 'bedinfo'
     id = db.Column(db.Integer, primary_key=True)
     areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
-    isused = db.Column(db.Boolean)
 
 
 class Price(db.Model):
@@ -142,61 +170,71 @@ class Price(db.Model):
     optionid = db.Column(db.Integer)  # 为药品、检查、检验ID
     price = db.Column(db.Float)
 
-# from . import db
+class FamilyDoctorArea(db.Model):                    #家庭医生服务区域
+    __tablename__ = 'fdarea'
+    id = db.Column(db.String(64), primary_key=True)
+    Areaname = db.Column(db.String(64))
 
-# class FamilyDoctorArea(db.Model):                    #家庭医生服务区域
-#     __tablename__ = 'fdarea'
-#     Areaid = db.Column(db.Integer, primary_key=True)
-#     Areaname = db.Column(db.String(64))
+class FamilyDoctor(db.Model):                        #创建家庭医生
+    __tablename__ = 'fd'
+    id = db.Column(db.String(64), primary_key=True)
+    FDdoctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    FDdoctorname = db.Column(db.String(64))
+    FDdoctorrank = db.Column(db.Integer)
+    FDdate = db.Column(db.String(128))
 
-# class FamilyDoctorTeam(db.Model):                    #创建家庭医生团队
-#     __tablename__ = 'fdteam'
-#     FDTid = db.Column(db.Integer, primary_key=True)
-#     FDTareaid = db.Column(db.Integer, db.ForeignKey('fdarea.Areaid'))
-#     FDTareaname = db.Column(db.String(64), db.ForeignKey('fdarea.Areaname'))
-#     FDTdoctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-#     FDTdoctorname = db.Column(db.String(64), db.ForeignKey('userinfo.name'))
-#     FDTdoctorrank = db.Column(db.Integer, db.ForeignKey('userinfo.rank'))
-#     FDTteamdate = db.Column(db.String(128), db.ForeignKey('outpatienttimetable.date'))
+class FamilyDoctorWorkArea(db.Model):               #分配区域
+    __tablename__ = 'fdworkarea'
+    id = db.Column(db.String(64), primary_key=True)
+    FDid = db.Column(db.String(64))                 #医生id
+    FDareaid= db.Column(db.String(64))              #分配区域的id
+    FDareaname= db.Column(db.String(64))            #分配区域的名字
 
-# class FamilyPatientInfo(db.Model):                   #家庭医生病人基本信息
-#     __tablename__ = 'fpinfo'
-#     FPid1 = db.Column(db.String(64), primary_key=True)  #病人身份证号
-#     FPname1 = db.Column(db.String(64))
-#     FPage = db.Column(db.Integer)
-#     FPsex = db.Column(db.String(64))
-#     FPphone = db.Column(db.String(64))
+class FamilyPatientInfo(db.Model):                      #家庭医生病人基本信息
+    __tablename__ = 'fpinfo'
+    id = db.Column(db.String(64), primary_key=True)     #病人身份证号
+    FPname = db.Column(db.String(64))
+    FPage = db.Column(db.Integer)
+    FPsex = db.Column(db.String(64))
+    FPphone = db.Column(db.String(64))
 
-# # class FamilyPatientTestResult(db.Model):             #体检结果
-# #     __tablename__ = 'fptestresult'
-# #     FPTRid = db.Column(db.Integer, primary_key=True)     #初始为1 自增
-# #     FPid2 = db.Column(db.String(64), db.ForeignKey('fpinfo.FPid1'))
-# #     FPname2 = db.Column(db.String(64), db.ForeignKey('fpinfo.FPname1'))
-# #     FPheartrate = db.Column(db.Integer)       #心率
-# #     FPbloodpressure = db.Column(db.Integer)   #血压
+class FamilyPatientTestResult(db.Model):             #体检结果
+    __tablename__ = 'fptestresult'
+    id = db.Column(db.String(64), primary_key=True)
+    FPid = db.Column(db.String(64))                  #病人身份证
+    FPname = db.Column(db.String(64))
+    FPheartrate = db.Column(db.Integer)              #心率
+    FPbloodpressure = db.Column(db.Integer)          #血压
+    FPresultdate = db.Column(db.String(64))          #检查日期
 
-# # class SpecialConcern(db.Model):                      #特殊关注对象
-# #     __tablename__ = 'specialconcern'
-# #     SCid = db.Column(db.Integer, primary_key=True)     #初始为1 自增
-# #     SCpid = db.Column(db.String(64), db.ForeignKey('fptestresult.FPid2'))      #特殊关注对象姓名
-# #     SCpname = db.Column(db.String(64), db.ForeignKey('fptestresult.FPname2'))  #特殊关注对象身份证 传递给门诊部
+class SpecialConcern(db.Model):                      #特殊关注对象
+    __tablename__ = 'specialconcern'
+    id = db.Column(db.String(64), primary_key=True)
+    SCpid = db.Column(db.String(64))
+    SCpname = db.Column(db.String(64))                                      #特殊关注对象身份证 传递给门诊部
+    SCpdate = db.Column(db.String(64))
 
-# class LecturePlace(db.Model):
-#     __tablename__ = 'lectureplace'
-#     LPid = db.Column(db.Integer, primary_key=True)
-#     LPname = db.Column(db.String(64))
-#     LParea = db.Column(db.String(64))                  #安排讲座时area与团队领队医生的服务区域进行对比
+class LecturePlace(db.Model):                        #家庭医生讲座地区
+    __tablename__ = 'lectureplace'
+    id = db.Column(db.String(64), primary_key=True)     #地区编号
+    LPname = db.Column(db.String(64))
 
-# class LectureTime(db.Model):
-#     __tablename__ = 'lecturename'
-#     LTid = db.Column(db.Integer, primary_key=True)
-#     LPid = db.Column(db.Integer, db.ForeignKey('lectureplace.LPid'))
-#     LPname = db.Column(db.String(64))
+class LectureTime(db.Model):                         #家庭医生讲座安排
+    __tablename__ = 'lecturetime'
+    id = db.Column(db.String(64), primary_key=True)
+    FDid = db.Column(db.String(64))
+    LPid = db.Column(db.String(64), db.ForeignKey('lectureplace.id'))
+    LPname = db.Column(db.String(64))
+    LPdate = db.Column(db.String(128))
 
 
 class OpCheckin(db.Model):
     __tablename__ = 'opcheckin'
+<<<<<<< Updated upstream
     opcheckinid = db.Column(db.Integer, primary_key=True)
+=======
+    opcheckinid = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
     doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
     doctortype = db.Column(db.Integer)
@@ -206,16 +244,27 @@ class OpCheckin(db.Model):
 
 class OpExam(db.Model):
     __tablename__ = 'opexam'
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
+=======
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
     examitems = db.Column(db.String(128))
+<<<<<<< Updated upstream
 
 
 class OpCheck(db.Model):
     __tablename__ = 'opcheck'
     id = db.Column(db.Integer, primary_key=True)
+=======
+
+class OpCheck(db.Model):
+    __tablename__ = 'opcheck'
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -224,7 +273,11 @@ class OpCheck(db.Model):
 
 class OpRecipe(db.Model):
     __tablename__ = 'oprecipe'
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
+=======
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -234,7 +287,11 @@ class OpRecipe(db.Model):
 
 class OpCheckinAfford(db.Model):
     __tablename__ = 'opcheckinafford'
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
+=======
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -243,7 +300,11 @@ class OpCheckinAfford(db.Model):
 
 class OpExamAfford(db.Model):
     __tablename__ = 'opexamafford'
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
+=======
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -252,7 +313,11 @@ class OpExamAfford(db.Model):
 
 class OpCheckAfford(db.Model):
     __tablename__ = 'opcheckafford'
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
+=======
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -261,12 +326,17 @@ class OpCheckAfford(db.Model):
 
 class OpRecipeAfford(db.Model):
     __tablename__ = 'oprecipeafford'
+<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
+=======
+    id = db.Column(db.Integer, primary_key= True)
+>>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
     price = db.Column(db.Float)
 
+<<<<<<< Updated upstream
 
 class OpCost(db.Model):
     __tablename__ = 'opcost'
@@ -375,3 +445,9 @@ class ImgpCost(db.Model):
     __tablename__ = 'imgpcost'
     imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'), primary_key= True)
     cost = db.Column(db.Float)
+=======
+class OpCost(db.Model):
+    __tablename__ = 'opcost'
+    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'), primary_key= True)
+    cost = db.Column(db.Float)
+>>>>>>> Stashed changes

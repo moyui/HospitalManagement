@@ -1,0 +1,21 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky -  家庭医生项目选择{% endblock %}
+
+{% block page_content %}
+
+<div class="page-header">
+    <h3>家庭医生项目选择</h3>
+</div>
+<ul>
+    <li><a href="{{ url_for('familydoctor.fdpatientinfo')}}">病人信息登记</a></li>
+    <li><a href="{{ url_for('familydoctor.testresult')}}">病人体检记录</a></li>
+    <li><a href="{{ url_for('familydoctor.specialconcern')}}">特殊关注对象</a></li>
+    <li><a href="{{ url_for('familydoctor.areainfo')}}">家庭医生区域</a></li>
+    <li><a href="{{ url_for('familydoctor.lectureinfo')}}">家庭医生讲座</a></li>
+    <li><a href="{{ url_for('familydoctor.fddelete')}}">家庭医生除名</a></li>
+    <li><a href="{{ url_for('familydoctor.fdcreate')}}">家庭医生安排</a></li>
+</ul>
+
+{% endblock %}
