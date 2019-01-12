@@ -131,6 +131,7 @@ class BedInfo(db.Model):
     __tablename__ = 'bedinfo'
     id = db.Column(db.Integer, primary_key=True)
     areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
+    isused = db.Column(db.Boolean)
 
 
 class Price(db.Model):
