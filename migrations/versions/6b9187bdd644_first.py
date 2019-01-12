@@ -1,8 +1,8 @@
-"""init
+"""first
 
-Revision ID: db2093ebce1e
+Revision ID: 6b9187bdd644
 Revises: 
-Create Date: 2019-01-12 23:21:27.678688
+Create Date: 2019-01-13 02:03:27.446415
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'db2093ebce1e'
+revision = '6b9187bdd644'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +28,35 @@ def upgrade():
     sa.Column('examname', sa.String(length=64), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('fdarea',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('Areaname', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('fdworkarea',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('FDid', sa.String(length=64), nullable=True),
+    sa.Column('FDareaid', sa.String(length=64), nullable=True),
+    sa.Column('FDareaname', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('fpinfo',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('FPname', sa.String(length=64), nullable=True),
+    sa.Column('FPage', sa.Integer(), nullable=True),
+    sa.Column('FPsex', sa.String(length=64), nullable=True),
+    sa.Column('FPphone', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('fptestresult',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('FPid', sa.String(length=64), nullable=True),
+    sa.Column('FPname', sa.String(length=64), nullable=True),
+    sa.Column('FPheartrate', sa.Integer(), nullable=True),
+    sa.Column('FPbloodpressure', sa.Integer(), nullable=True),
+    sa.Column('FPresultdate', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('hospitalconstuct',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
@@ -37,6 +66,11 @@ def upgrade():
     op.create_table('inhospitalarea',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('areaname', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('lectureplace',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('LPname', sa.String(length=64), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('medicine',
@@ -59,6 +93,13 @@ def upgrade():
     sa.Column('price', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('specialconcern',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('SCpid', sa.String(length=64), nullable=True),
+    sa.Column('SCpname', sa.String(length=64), nullable=True),
+    sa.Column('SCpdate', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('usergroup',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
@@ -67,7 +108,6 @@ def upgrade():
     op.create_table('bedinfo',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('areaid', sa.Integer(), nullable=True),
-    sa.Column('isused', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['areaid'], ['inhospitalarea.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -93,6 +133,15 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_table('lecturetime',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('FDid', sa.String(length=64), nullable=True),
+    sa.Column('LPid', sa.String(length=64), nullable=True),
+    sa.Column('LPname', sa.String(length=64), nullable=True),
+    sa.Column('LPdate', sa.String(length=128), nullable=True),
+    sa.ForeignKeyConstraint(['LPid'], ['lectureplace.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('userinfo',
     sa.Column('id', sa.String(length=64), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
@@ -117,6 +166,15 @@ def upgrade():
     sa.Column('date', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['cid'], ['hospitalclass.id'], ),
     sa.ForeignKeyConstraint(['userinfoid'], ['userinfo.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('fd',
+    sa.Column('id', sa.String(length=64), nullable=False),
+    sa.Column('FDdoctorid', sa.String(length=64), nullable=True),
+    sa.Column('FDdoctorname', sa.String(length=64), nullable=True),
+    sa.Column('FDdoctorrank', sa.Integer(), nullable=True),
+    sa.Column('FDdate', sa.String(length=128), nullable=True),
+    sa.ForeignKeyConstraint(['FDdoctorid'], ['userinfo.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('imgdoctortimetable',
@@ -337,19 +395,27 @@ def downgrade():
     op.drop_table('opcheckin')
     op.drop_table('imgpcheckin')
     op.drop_table('imgdoctortimetable')
+    op.drop_table('fd')
     op.drop_table('expertstimetable')
     op.drop_table('doctortimetable')
     op.drop_table('userinfo')
+    op.drop_table('lecturetime')
     op.drop_table('hospitalclass')
     op.drop_table('examitem')
     op.drop_table('checkitem')
     op.drop_table('bedinfo')
     op.drop_table('usergroup')
+    op.drop_table('specialconcern')
     op.drop_table('price')
     op.drop_table('patientinfo')
     op.drop_table('medicine')
+    op.drop_table('lectureplace')
     op.drop_table('inhospitalarea')
     op.drop_table('hospitalconstuct')
+    op.drop_table('fptestresult')
+    op.drop_table('fpinfo')
+    op.drop_table('fdworkarea')
+    op.drop_table('fdarea')
     op.drop_table('examclass')
     op.drop_table('checkclass')
     # ### end Alembic commands ###

@@ -1,6 +1,6 @@
 import os 
 from app import create_app, db 
-from app.model import UserGroup, HospitalConstuct, HospitalClass, PatientInfo, UserInfo, DoctorTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price, OpCheckin, OpExam, OpCheck, OpRecipe, OpCheckinAfford, OpExamAfford, OpCheckAfford, OpRecipeAfford, FamilyDoctorArea, FamilyDoctor, FamilyDoctorWorkArea, FamilyPatientInfo, FamilyPatientTestResult, SpecialConcern, LecturePlace, LectureTime
+from app.model import UserGroup, UserInfo, HospitalConstuct, HospitalClass, PatientInfo, DoctorTimetable, ImgDoctorTimetable, ExpertsTimetable, Medicine, CheckClass, CheckItem, ExamClass, ExamItem, InhospitalArea, BedInfo, Price, FamilyDoctorArea, FamilyDoctor, FamilyDoctorWorkArea, FamilyPatientInfo, FamilyPatientTestResult, SpecialConcern, LecturePlace, LectureTime, OpCheckin, OpExam, OpCheck, OpRecipe, OpCheckinAfford, OpExamAfford, OpCheckAfford, OpRecipeAfford, OpCost, InPatientDeposit, InPatientTableSet, InPatientTimeAndBed, InPatientCheck, InPatientInspect, InPatientPrescript, ImgpCheckin, ImgpRecipe, ImgpCheckinAfford, ImgpRecipeAfford, ImgpCost
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
