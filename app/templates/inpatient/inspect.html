@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 住院检验 {% endblock %}
+
+{% block page_content %}
+<style type="text/css">
+    .form-control {
+      border: none !important;
+      height: 100% !important;
+    }
+    </style>
+<div class="page-header">
+    <h3>住院检验</h3>
+</div>
+<div>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

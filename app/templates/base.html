@@ -9,24 +9,24 @@
     type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
     type="image/x-icon">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 {% endblock %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand">医院信息管理系统</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">医院信息管理系统</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('outpatient.checkin')}}">门诊模块</a></li>
                 <li><a href="{{ url_for('inpatient.index')}}">住院模块</a></li>
                 <li><a href="{{ url_for('charges.index')}}">收费模块</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if name %}
-                <li>您好，{{name}}医生</li>
-                <li>wtf.quick_form(form)</li>
+                <li><a>您好，{{name}}医生</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
                 {% else %}
                 <li><a href="{{ url_for('auth.login') }}">登录</a></li>
                 {% endif %}
@@ -37,7 +37,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">    
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
     {% block page_content %}{% endblock %}
 </div>
 {% endblock %}

@@ -1,17 +1,19 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}药品数量{% endblock %}
+{% block title %}门诊导航{% endblock %}
 
 {% block page_content %}
-<div>
+<div class="page-header">
         <h3>
             请选择要进行的操作
         </h3>
 </div>
-<div>
+<div class="col-md-4">
     <li><a href="{{ url_for("outpatient.exam")}}">门诊检验</a></li>
     <li><a href="{{ url_for("outpatient.check")}}">门诊检查</a></li>
     <li><a href="{{ url_for("outpatient.recipe")}}">门诊处方</a></li>
     <li><a href="{{ url_for("outpatient.cost")}}">费用结算</a></li>
 </div>
+<div> {{ wtf.quick_form(form) }}</div>
 {% endblock %}

@@ -4,11 +4,16 @@
 {% block title %}Flasky - 门诊检验 {% endblock %}
 
 {% block page_content %}
-
-<div>
+<style type="text/css">
+    .form-control {
+      border: none !important;
+      height: 100% !important;
+    }
+    </style>
+<div class="page-header">
     <h3>门诊检验项目</h3>
 </div>
-<div>
+<div class="col-md-4">
     {{ wtf.quick_form(form) }}
 </div>
 {% endblock %}

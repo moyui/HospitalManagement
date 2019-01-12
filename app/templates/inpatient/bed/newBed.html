@@ -5,16 +5,8 @@
 
 {% block page_content %}
 
-<div>
+<div class="page-header"> 
     <h3>新建病床</h3>
-</div>
-<div>
-    <h4>剩余床位</h4>
-    <ul>
-        {% for item in remainBed %}
-        <li>床号：{{item.id}},区域号：{{item.areaid}}</li>
-        {% endfor %}
-    </ul>
 </div>
 <div class="col-md-4">
     {{ wtf.quick_form(form) }}

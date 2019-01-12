@@ -1,18 +1,19 @@
 from flask import render_template, redirect, request, url_for, flash, make_response
-from flask_session import Session
 from . import outpatient
-from .form import OpCheckForm, OpCheckinForm, OpExamForm, OpRecipeForm
+from .form import OpCheckForm, OpCheckinForm, OpExamForm, OpRecipeForm, OpIndexFrom
 from ..model import OpCheck, OpCheckAfford, OpCheckin, OpCheckinAfford, OpExam, OpExamAfford, OpRecipe, OpRecipeAfford, Medicine, Price, UserInfo, OpCost
 from .. import db
+from ..decorator import is_login
 import datetime
 
 @outpatient.route('/outpatient/checkin', methods= ['GET', 'POST'])
-def checkin():
+@is_login
+def checkin(name):
         patientcheckin = OpCheckin()
         form = OpCheckinForm()
         price = OpCheckinAfford()
         if request.method == 'GET':
-                return render_template('outpatient/checkin.html', form= form)
+                return render_template('outpatient/checkin.html', form= form, name= name)
         else:
                 if form.validate_on_submit():
                         response = make_response(redirect(url_for('outpatient.opindex')))
@@ -43,20 +44,32 @@ def checkin():
         
 
 @outpatient.route('/outpatient/opindex', methods= ['GET', 'POST'])
-def opindex():
+@is_login
+def opindex(name):
+        form = OpIndexFrom()
+        nowpcheckid = int(request.cookies.get('nopcid'))
         if request.method == 'GET':
                 # nowpcheckid = request.cookies.get('nopcid')
                 # print('2', type(int(nowpcheckid)), int(nowpcheckid))
-                return render_template('outpatient/opindex.html')
+                return render_template('outpatient/opindex.html', form= form, name= name)
+        else:
+                if form.inpatientcheck.data == True:
+                        opcheckininfo = OpCheckin.query.filter_by(opcheckinid= nowpcheckid).first()
+                        opcheckininfo.jips = True
+                        db.session.commit()
+                else :
+                        pass
+                return render_template('outpatient/opindex.html', form= form, name= name)
 
 @outpatient.route('/outpatient/exam', methods= ['GET', 'POST'])
-def exam():
+@is_login
+def exam(name):
         patientexam = OpExam()
         form = OpExamForm()
         price = OpExamAfford()
         nowpcheckid = request.cookies.get('nopcid')
         if request.method == 'GET':
-                return render_template('outpatient/exam.html', form= form)
+                return render_template('outpatient/exam.html', form= form, name= name)
         else:
                 if form.validate_on_submit():
                         patientexam.opcheckinid = int(nowpcheckid)
@@ -75,17 +88,18 @@ def exam():
                         db.session.add(price)
                         db.session.commit()
                         flash('选择的检验项目已经上传')
-                        return redirect(url_for('outpatient.opindex'))
+                        return redirect(url_for('outpatient.opindex', name= name))
         
 
 @outpatient.route('/outpatient/check', methods= ['GET', 'POST'])
-def check():
+@is_login
+def check(name):
         patientcheck = OpCheck()
         form = OpCheckForm()
         price = OpCheckAfford()
         nowpcheckid = request.cookies.get('nopcid')
         if request.method == 'GET':
-                return render_template('outpatient/check.html', form= form)
+                return render_template('outpatient/check.html', form= form, name= name)
         else:
                 if form.validate_on_submit():
                         patientcheck.opcheckinid = int(nowpcheckid)
@@ -104,16 +118,17 @@ def check():
                         db.session.add(price)
                         db.session.commit()
                         flash('选择的检查项目已经上传')
-                        return redirect(url_for('outpatient.opindex'))
+                        return redirect(url_for('outpatient.opindex', name= name))
         
 
 @outpatient.route('/outpatient/recipe', methods= ['GET', 'POST'])
-def recipe():
+@is_login
+def recipe(name):
         patientrecipe=OpRecipe()
         form = OpRecipeForm()
         nowpcheckid = request.cookies.get('nopcid')
         if request.method == 'GET':
-               return render_template('/outpatient/medicine.html', form= form)
+               return render_template('/outpatient/medicine.html', form= form, name= name)
         else: 
                 if form.validate_on_submit():
                         patientrecipe.opcheckinid = int(nowpcheckid)
@@ -121,10 +136,11 @@ def recipe():
                         patientrecipe.medicinenames = ','.join(form.medicines.data)
                         db.session.add(patientrecipe)
                         db.session.commit()
-                        return redirect(url_for('outpatient.recipenum'))
+                        return redirect(url_for('outpatient.recipenum', name= name))
 
 @outpatient.route('/outpatient/recipenum', methods= ['GET', 'POST'])
-def recipenum():
+@is_login
+def recipenum(name):
         nowpcheckid = request.cookies.get('nopcid')
         price = OpRecipeAfford()
         if request.method == 'GET':
@@ -137,7 +153,7 @@ def recipenum():
                         med = Medicine.query.filter_by(id= item).first()
                         medname = med.medicinename
                         medsnlist.append(medname)
-                return render_template('outpatient/recipenum.html', medsnlist= medsnlist)
+                return render_template('outpatient/recipenum.html', medsnlist= medsnlist, name= name)
         else:
                 patientcheckinid = int(nowpcheckid)
                 oprecipe = OpRecipe.query.filter(OpRecipe.opcheckinid == patientcheckinid).first()
@@ -169,10 +185,11 @@ def recipenum():
                 db.session.add(price)
                 db.session.commit()
                 flash('处方已经上传完成')
-                return redirect(url_for('outpatient.opindex'))
+                return redirect(url_for('outpatient.opindex', name= name))
 
 @outpatient.route('/outpatient/cost', methods= ['GET', 'POST'])
-def cost():
+@is_login
+def cost(name):
         cost = OpCost()
         nowpcheckid = int(request.cookies.get('nopcid'))
         if request.method == 'GET':
@@ -192,4 +209,4 @@ def cost():
                 
                 db.session.add(cost)
                 db.session.commit()
-                return render_template('outpatient/cost.html', price= price)
+                return render_template('outpatient/cost.html', price= price, name= name)

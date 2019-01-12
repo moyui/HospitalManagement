@@ -5,19 +5,16 @@
 
 {% block page_content %}
 
-<div>
+<div class="page-header">
     <h3>终止病床</h3>
 </div>
-<div>
+<div class="col-md-4">
     <h4>你的床位</h4>
     {% if myBed %}
         <p>床号：{{myBed.bedid}}<p>
         <p>开始日期：{{myBed.startdate}}</p>
         <p>结束日期：{{myBed.enddate}}</p>
-    {% elif %}
     {% endif %}
-</div>
-<div class="col-md-4">
     {{ wtf.quick_form(form) }}
 </div>
 

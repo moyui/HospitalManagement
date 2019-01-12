@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, SelectMultipleField, widgets
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, SelectMultipleField, widgets, BooleanField
 from wtforms.validators import DataRequired, Length, Regexp, EqualTo
 from ..model import OpCheckin, ExamItem, CheckItem, Medicine, DoctorTimetable, ExpertsTimetable, UserInfo
 from datetime import datetime
@@ -7,7 +7,6 @@ from datetime import datetime
 class OpCheckinForm(FlaskForm):
     patientid = StringField('身份证', validators=[DataRequired(), Length(8, 10), Regexp('^[0-9Xx]*$', 0, '身份证必须是数字或者大小写X')])
     doctorname = SelectField('医生姓名', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
-    # expertname = SelectField('专家姓名', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
     def __init__(self, *args, **kwargs):
@@ -70,4 +69,6 @@ class OpRecipeForm(FlaskForm):
         medicinelist = Medicine.query.with_entities(Medicine.id, Medicine.medicinename).all()
         self.medicines.choices = medicinelist
 
-    
+class OpIndexFrom(FlaskForm):
+    inpatientcheck = BooleanField('住院')
+    submit = SubmitField('确定')

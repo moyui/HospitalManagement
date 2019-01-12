@@ -8,14 +8,16 @@
 <div class="page-header">
     <h3>住院病人信息</h3>
 </div>
-{% if nodata %}
-<h6>找不到对应病人的数据</h6>
-{% endif %}
 <div class="col-md-4">
+    {% if nodata %}
+    <h5>找不到对应病人的数据， 可能病人未支付押金费用</h5>
+    {% endif %}
     {{ wtf.quick_form(form) }}
+    {% if patientid and id %}
+    <div class="form-group">
+        <a class="btn btn-default" style="margin-top:15px" href="{{url_for('inpatient.patientList', patientid=patientid, id=id)}}">下一步</a>
+    </div>
+    {% endif %}
 </div>
-{% if patientid and id %}
-    <a href="{{url_for('inpatient.patientList', patientid=patientid, id=id)}}">下一步</a>
-{% endif %}
 
 {% endblock %}
