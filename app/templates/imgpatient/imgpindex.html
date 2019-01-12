@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}急诊导航{% endblock %}
+
+{% block page_content %}
+<div>
+        <h3>
+            请选择要进行的操作
+        </h3>
+</div>
+<div>
+    <li><a href="{{ url_for("imgpatient.recipe")}}">急诊处方</a></li>
+    <li><a href="{{ url_for("imgpatient.cost")}}">费用结算</a></li>
+</div>
+{% endblock %}

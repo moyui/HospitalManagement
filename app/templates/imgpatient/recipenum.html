@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}药品数量{% endblock %}
+
+{% block page_content %}
+<div>
+        <h3>
+            请输入已选择的药品数量
+        </h3>
+</div>
+
+<form action="" method="POST" novalidate>
+    {% for item in medsnlist %}
+    <p>{{ item }} <input type="text" name= "{{ item }}"></p>
+    {% endfor %}
+    <input type="submit" value="提交">
+</form>
+{% endblock %}

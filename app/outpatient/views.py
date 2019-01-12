@@ -16,7 +16,7 @@ def checkin(name):
                 return render_template('outpatient/checkin.html', form= form, name= name)
         else:
                 if form.validate_on_submit():
-                        response = make_response(redirect(url_for('outpatient.opindex')))
+                        response = make_response(redirect(url_for('outpatient.opindex', name= name)))
                         prepatient = OpCheckin.query.order_by(OpCheckin.opcheckinid.desc()).first()
                         patientcheckin.opcheckinid = prepatient.opcheckinid + 1
 

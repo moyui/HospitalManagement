@@ -1,0 +1,16 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky -  住院缴费{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h3>确认病人</h3>
+</div>
+{% if nodata %}
+<h6>找不到对应病人的数据</h6>
+{% endif %}
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %} 

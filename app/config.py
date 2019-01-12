@@ -16,7 +16,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DEV_DATABASE_URL') or 'mysql+pymysql://root:gxy151o11,A@localhost/hsp'  # 高夕毓的不用删，之后都用注释就行了
+        'DEV_DATABASE_URL') or 'mysql+pymysql://root:mysql687610@localhost/hsp'  # 高夕毓的不用删，之后都用注释就行了
         # 'DEV_DATABASE_URL') or 'mysql+pymysql://root:mysql687610@localhost/hsp'  # 后面自己填写连接数据库
 
 

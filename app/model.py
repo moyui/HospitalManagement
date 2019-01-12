@@ -50,6 +50,12 @@ class DoctorTimetable(db.Model):
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
 
+class ImgDoctorTimetable(db.Model):
+    __tablename__ = 'imgdoctortimetable'
+    id = db.Column(db.String(64), primary_key=True)
+    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    doctortime = db.Column(db.Integer)
+
 # 医生轮作
 
 
@@ -329,4 +335,43 @@ class InPatientPrescript(db.Model):
     medicineid = db.Column(db.String(128))
     medicinenumbers = db.Column(db.String(128))
     doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    cost = db.Column(db.Float)
+
+class ImgpCheckin(db.Model):
+    __tablename__ = 'imgpcheckin'
+    imgpcheckinid = db.Column(db.Integer, primary_key= True)
+    patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
+    doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
+    doctortype = db.Column(db.Integer)
+    # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
+    # jips = db.Column(db.Boolean)
+
+class ImgpRecipe(db.Model):
+    __tablename__ = 'imgprecipe'
+    id = db.Column(db.Integer, primary_key= True)
+    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'))
+    imgpid = db.Column(db.String(64), db.ForeignKey(
+        'imgpcheckin.patientid'))
+    medicinenames = db.Column(db.String(128))
+    medicinenumbers = db.Column(db.String(128))
+
+class ImgpCheckinAfford(db.Model):
+    __tablename__ = 'imgpcheckinafford'
+    id = db.Column(db.Integer, primary_key= True)
+    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'))
+    imgpid = db.Column(db.String(64), db.ForeignKey(
+        'imgpcheckin.patientid'))
+    price = db.Column(db.Float)
+
+class ImgpRecipeAfford(db.Model):
+    __tablename__ = 'imgprecipeafford'
+    id = db.Column(db.Integer, primary_key= True)
+    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'))
+    imgpid = db.Column(db.String(64), db.ForeignKey(
+        'imgpcheckin.patientid'))
+    price = db.Column(db.Float)
+
+class ImgpCost(db.Model):
+    __tablename__ = 'imgpcost'
+    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'), primary_key= True)
     cost = db.Column(db.Float)

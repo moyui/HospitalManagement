@@ -5,7 +5,7 @@ from ..model import OpCheckin, ExamItem, CheckItem, Medicine, DoctorTimetable, E
 from datetime import datetime
 
 class OpCheckinForm(FlaskForm):
-    patientid = StringField('身份证', validators=[DataRequired(), Length(8, 10), Regexp('^[0-9Xx]*$', 0, '身份证必须是数字或者大小写X')])
+    patientid = StringField('身份证', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '身份证必须是数字或者大小写X')])
     doctorname = SelectField('医生姓名', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
@@ -38,7 +38,7 @@ class OpCheckinForm(FlaskForm):
         self.doctorname.choices = zip(did, dn)
 
 class OpExamForm(FlaskForm):
-    opid = StringField('患者号', validators=[DataRequired(), Length(8, 10), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
+    opid = StringField('患者号', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
     examitems = SelectMultipleField('检验项目', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
     print(examitems)
@@ -50,7 +50,7 @@ class OpExamForm(FlaskForm):
         self.examitems.choices = examlist 
 
 class OpCheckForm(FlaskForm):
-    opid = StringField('患者号', validators=[DataRequired(), Length(8, 10), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
+    opid = StringField('患者号', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
     checkitems = SelectMultipleField('检查项目', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
@@ -60,7 +60,7 @@ class OpCheckForm(FlaskForm):
         self.checkitems.choices = checklist
     
 class OpRecipeForm(FlaskForm):
-    opid = StringField('患者号', validators=[DataRequired(), Length(8, 10), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
+    opid = StringField('患者号', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
     medicines = SelectMultipleField('药品', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
