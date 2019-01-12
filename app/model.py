@@ -43,8 +43,6 @@ class PatientInfo(db.Model):
     sex = db.Column(db.Integer)  # 1-男 0-女
     age = db.Column(db.Integer)
 
-<<<<<<< Updated upstream
-=======
 class DoctorTimetable(db.Model):
     __tablename__ = 'doctortimetable'
     id = db.Column(db.String(64), primary_key=True)
@@ -52,7 +50,6 @@ class DoctorTimetable(db.Model):
     doctortime = db.Column(db.Integer)
 
 # 医生轮作
->>>>>>> Stashed changes
 
 class DoctorTimetable(db.Model):
     __tablename__ = 'doctortimetable'
@@ -60,30 +57,14 @@ class DoctorTimetable(db.Model):
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
 
-<<<<<<< Updated upstream
 class ImgDoctorTimetable(db.Model):
     __tablename__ = 'imgdoctortimetable'
     id = db.Column(db.String(64), primary_key=True)
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
-=======
-# class DoctorCycle(db.Model):
-#     __tablename__ = 'doctorcycle'
-#     id = db.Column(db.Integer, primary_key=True)
-#     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-#     classid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
->>>>>>> Stashed changes
 
 # 医生轮作
 
-<<<<<<< Updated upstream
-=======
-# class OutPatientTimetable(db.Model):
-#     __tablename__ = 'outpatienttimetable'
-#     id = db.Column(db.Integer, primary_key=True)
-#     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
-#     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
->>>>>>> Stashed changes
 
 # class DoctorCycle(db.Model):
 #     __tablename__ = 'doctorcycle'
@@ -98,10 +79,6 @@ class ImgDoctorTimetable(db.Model):
 #     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
 #     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 # class InPatientTimetable(db.Model):
 #     __tablename__ = 'inpatienttimetable'
 #     id = db.Column(db.Integer, primary_key=True)
@@ -230,11 +207,7 @@ class LectureTime(db.Model):                         #家庭医生讲座安排
 
 class OpCheckin(db.Model):
     __tablename__ = 'opcheckin'
-<<<<<<< Updated upstream
     opcheckinid = db.Column(db.Integer, primary_key=True)
-=======
-    opcheckinid = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
     doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
     doctortype = db.Column(db.Integer)
@@ -244,27 +217,16 @@ class OpCheckin(db.Model):
 
 class OpExam(db.Model):
     __tablename__ = 'opexam'
-<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
-=======
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
     examitems = db.Column(db.String(128))
-<<<<<<< Updated upstream
 
 
 class OpCheck(db.Model):
     __tablename__ = 'opcheck'
     id = db.Column(db.Integer, primary_key=True)
-=======
-
-class OpCheck(db.Model):
-    __tablename__ = 'opcheck'
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -273,11 +235,7 @@ class OpCheck(db.Model):
 
 class OpRecipe(db.Model):
     __tablename__ = 'oprecipe'
-<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
-=======
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -287,11 +245,7 @@ class OpRecipe(db.Model):
 
 class OpCheckinAfford(db.Model):
     __tablename__ = 'opcheckinafford'
-<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
-=======
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -300,11 +254,7 @@ class OpCheckinAfford(db.Model):
 
 class OpExamAfford(db.Model):
     __tablename__ = 'opexamafford'
-<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
-=======
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -313,11 +263,7 @@ class OpExamAfford(db.Model):
 
 class OpCheckAfford(db.Model):
     __tablename__ = 'opcheckafford'
-<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
-=======
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
@@ -326,17 +272,12 @@ class OpCheckAfford(db.Model):
 
 class OpRecipeAfford(db.Model):
     __tablename__ = 'oprecipeafford'
-<<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)
-=======
-    id = db.Column(db.Integer, primary_key= True)
->>>>>>> Stashed changes
     opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
     opid = db.Column(db.String(64), db.ForeignKey(
         'opcheckin.patientid'))
     price = db.Column(db.Float)
 
-<<<<<<< Updated upstream
 
 class OpCost(db.Model):
     __tablename__ = 'opcost'
@@ -445,9 +386,3 @@ class ImgpCost(db.Model):
     __tablename__ = 'imgpcost'
     imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'), primary_key= True)
     cost = db.Column(db.Float)
-=======
-class OpCost(db.Model):
-    __tablename__ = 'opcost'
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'), primary_key= True)
-    cost = db.Column(db.Float)
->>>>>>> Stashed changes
