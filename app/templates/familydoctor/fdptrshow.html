@@ -1,0 +1,30 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 家庭医生{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+        <h4>家庭医生</h4>
+        <li><a href="{{ url_for('familydoctor.testresult')}}">返回</a></li>
+    </div>
+<div class="col-md-4">
+    <div>
+        <h4>家庭医生病人体检记录</h4>
+        <ul>
+            {% for item in fdptrinfo %}
+            <li>
+                病人的id:{{item.FPid}}
+                病人的姓名:{{item.FPname}}
+                病人的心率:{{item.FPheartrate}}
+                病人的血压:{{item.FPbloodpressure}}
+                记录的日期:{{item.FPresultdate}}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

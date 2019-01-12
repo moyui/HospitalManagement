@@ -1,0 +1,14 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 家庭医生{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>输入要删除医生的id</h4>
+    <li><a href="{{ url_for('familydoctor.index')}}">返回</a></li>
+</div>
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

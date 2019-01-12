@@ -1,0 +1,14 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky -  住院缴费{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h3>缴费</h3>
+</div>
+<div>
+    <p>总计：{{total}}</p>
+    <p>押金余额：{{rest}}</p>
+</div>
+{% endblock %} 

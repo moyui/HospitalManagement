@@ -43,6 +43,13 @@ class PatientInfo(db.Model):
     sex = db.Column(db.Integer)  # 1-男 0-女
     age = db.Column(db.Integer)
 
+class DoctorTimetable(db.Model):
+    __tablename__ = 'doctortimetable'
+    id = db.Column(db.String(64), primary_key=True)
+    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    doctortime = db.Column(db.Integer)
+
+# 医生轮作
 
 class DoctorTimetable(db.Model):
     __tablename__ = 'doctortimetable'
@@ -71,7 +78,6 @@ class ImgDoctorTimetable(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
 #     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
-
 
 # class InPatientTimetable(db.Model):
 #     __tablename__ = 'inpatienttimetable'
@@ -133,7 +139,6 @@ class BedInfo(db.Model):
     __tablename__ = 'bedinfo'
     id = db.Column(db.Integer, primary_key=True)
     areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
-    isused = db.Column(db.Boolean)
 
 
 class Price(db.Model):
@@ -142,56 +147,62 @@ class Price(db.Model):
     optionid = db.Column(db.Integer)  # 为药品、检查、检验ID
     price = db.Column(db.Float)
 
-# from . import db
+class FamilyDoctorArea(db.Model):                    #家庭医生服务区域
+    __tablename__ = 'fdarea'
+    id = db.Column(db.String(64), primary_key=True)
+    Areaname = db.Column(db.String(64))
 
-# class FamilyDoctorArea(db.Model):                    #家庭医生服务区域
-#     __tablename__ = 'fdarea'
-#     Areaid = db.Column(db.Integer, primary_key=True)
-#     Areaname = db.Column(db.String(64))
+class FamilyDoctor(db.Model):                        #创建家庭医生
+    __tablename__ = 'fd'
+    id = db.Column(db.String(64), primary_key=True)
+    FDdoctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
+    FDdoctorname = db.Column(db.String(64))
+    FDdoctorrank = db.Column(db.Integer)
+    FDdate = db.Column(db.String(128))
 
-# class FamilyDoctorTeam(db.Model):                    #创建家庭医生团队
-#     __tablename__ = 'fdteam'
-#     FDTid = db.Column(db.Integer, primary_key=True)
-#     FDTareaid = db.Column(db.Integer, db.ForeignKey('fdarea.Areaid'))
-#     FDTareaname = db.Column(db.String(64), db.ForeignKey('fdarea.Areaname'))
-#     FDTdoctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-#     FDTdoctorname = db.Column(db.String(64), db.ForeignKey('userinfo.name'))
-#     FDTdoctorrank = db.Column(db.Integer, db.ForeignKey('userinfo.rank'))
-#     FDTteamdate = db.Column(db.String(128), db.ForeignKey('outpatienttimetable.date'))
+class FamilyDoctorWorkArea(db.Model):               #分配区域
+    __tablename__ = 'fdworkarea'
+    id = db.Column(db.String(64), primary_key=True)
+    FDid = db.Column(db.String(64))                 #医生id
+    FDareaid= db.Column(db.String(64))              #分配区域的id
+    FDareaname= db.Column(db.String(64))            #分配区域的名字
 
-# class FamilyPatientInfo(db.Model):                   #家庭医生病人基本信息
-#     __tablename__ = 'fpinfo'
-#     FPid1 = db.Column(db.String(64), primary_key=True)  #病人身份证号
-#     FPname1 = db.Column(db.String(64))
-#     FPage = db.Column(db.Integer)
-#     FPsex = db.Column(db.String(64))
-#     FPphone = db.Column(db.String(64))
+class FamilyPatientInfo(db.Model):                      #家庭医生病人基本信息
+    __tablename__ = 'fpinfo'
+    id = db.Column(db.String(64), primary_key=True)     #病人身份证号
+    FPname = db.Column(db.String(64))
+    FPage = db.Column(db.Integer)
+    FPsex = db.Column(db.String(64))
+    FPphone = db.Column(db.String(64))
 
-# # class FamilyPatientTestResult(db.Model):             #体检结果
-# #     __tablename__ = 'fptestresult'
-# #     FPTRid = db.Column(db.Integer, primary_key=True)     #初始为1 自增
-# #     FPid2 = db.Column(db.String(64), db.ForeignKey('fpinfo.FPid1'))
-# #     FPname2 = db.Column(db.String(64), db.ForeignKey('fpinfo.FPname1'))
-# #     FPheartrate = db.Column(db.Integer)       #心率
-# #     FPbloodpressure = db.Column(db.Integer)   #血压
+class FamilyPatientTestResult(db.Model):             #体检结果
+    __tablename__ = 'fptestresult'
+    id = db.Column(db.String(64), primary_key=True)
+    FPid = db.Column(db.String(64))                  #病人身份证
+    FPname = db.Column(db.String(64))
+    FPheartrate = db.Column(db.Integer)              #心率
+    FPbloodpressure = db.Column(db.Integer)          #血压
+    FPresultdate = db.Column(db.String(64))          #检查日期
 
-# # class SpecialConcern(db.Model):                      #特殊关注对象
-# #     __tablename__ = 'specialconcern'
-# #     SCid = db.Column(db.Integer, primary_key=True)     #初始为1 自增
-# #     SCpid = db.Column(db.String(64), db.ForeignKey('fptestresult.FPid2'))      #特殊关注对象姓名
-# #     SCpname = db.Column(db.String(64), db.ForeignKey('fptestresult.FPname2'))  #特殊关注对象身份证 传递给门诊部
+class SpecialConcern(db.Model):                      #特殊关注对象
+    __tablename__ = 'specialconcern'
+    id = db.Column(db.String(64), primary_key=True)
+    SCpid = db.Column(db.String(64))
+    SCpname = db.Column(db.String(64))                                      #特殊关注对象身份证 传递给门诊部
+    SCpdate = db.Column(db.String(64))
 
-# class LecturePlace(db.Model):
-#     __tablename__ = 'lectureplace'
-#     LPid = db.Column(db.Integer, primary_key=True)
-#     LPname = db.Column(db.String(64))
-#     LParea = db.Column(db.String(64))                  #安排讲座时area与团队领队医生的服务区域进行对比
+class LecturePlace(db.Model):                        #家庭医生讲座地区
+    __tablename__ = 'lectureplace'
+    id = db.Column(db.String(64), primary_key=True)     #地区编号
+    LPname = db.Column(db.String(64))
 
-# class LectureTime(db.Model):
-#     __tablename__ = 'lecturename'
-#     LTid = db.Column(db.Integer, primary_key=True)
-#     LPid = db.Column(db.Integer, db.ForeignKey('lectureplace.LPid'))
-#     LPname = db.Column(db.String(64))
+class LectureTime(db.Model):                         #家庭医生讲座安排
+    __tablename__ = 'lecturetime'
+    id = db.Column(db.String(64), primary_key=True)
+    FDid = db.Column(db.String(64))
+    LPid = db.Column(db.String(64), db.ForeignKey('lectureplace.id'))
+    LPname = db.Column(db.String(64))
+    LPdate = db.Column(db.String(128))
 
 
 class OpCheckin(db.Model):

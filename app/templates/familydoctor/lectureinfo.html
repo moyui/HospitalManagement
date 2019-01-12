@@ -1,0 +1,17 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 家庭医生{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>输入家庭医生讲座区域</h4>
+    <li><a href="{{ url_for('familydoctor.index')}}">返回</a></li>
+</div>
+{% if nodata %}
+<h3>讲座区域已经登记</h3>
+{% endif %}
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
