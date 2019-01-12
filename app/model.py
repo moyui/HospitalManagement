@@ -49,14 +49,6 @@ class DoctorTimetable(db.Model):
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
 
-# 医生轮作
-
-class DoctorTimetable(db.Model):
-    __tablename__ = 'doctortimetable'
-    id = db.Column(db.String(64), primary_key=True)
-    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    doctortime = db.Column(db.Integer)
-
 class ImgDoctorTimetable(db.Model):
     __tablename__ = 'imgdoctortimetable'
     id = db.Column(db.String(64), primary_key=True)

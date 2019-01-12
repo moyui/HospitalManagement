@@ -1,5 +1,4 @@
 from flask import render_template, redirect, request, url_for, flash, make_response
-from flask_session import Session
 from .import imgpatient
 from .form import ImgpCheckinForm, ImgpRecipeForm
 from ..model import  Medicine, Price, UserInfo, ImgDoctorTimetable, ImgpCheckin, ImgpCheckinAfford, ImgpRecipe, ImgpRecipeAfford, ImgpCost

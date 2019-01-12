@@ -2,7 +2,7 @@
 from flask import render_template, redirect, request, url_for, flash
 from . import charges
 from .form import PreChargeCheckForm, PreChargePayForm, PreChargeLoginFrom
-from ..model import InPatientDeposit, PatientInfo, OpCheckin
+from ..model import InPatientDeposit, PatientInfo, OpCheckin, BedInfo, Price, Medicine, UserInfo,ExamItem, CheckItem, InPatientTableSet,InPatientCheck, InPatientInspect,InPatientPrescript, InPatientTimeAndBed
 from .. import db
 from ..decorator import is_login
 
@@ -76,25 +76,45 @@ def depositPay(name):
 @charges.route('/charges/pay/check', methods=['GET', 'POST'])
 @is_login
 def payCheck(name):
-    
-
-
-
-@charges.route('/charges/', methods=['GET', 'POST'])
-@is_login
-def depositCheck(name):
-    checkForm = PreChargeCheckForm()
+    form = PreChargeLoginFrom()
     if request.method == 'GET':
-        return render_template('charges/depositCheck.html', form=checkForm, name=name)
+        return render_template('charges/payCheck.html', form=form, name=name)
     else:
-        if checkForm.validate_on_submit():
-            formPatientId = checkForm.id.data
-            # 查找当前最后一条看病记录
-            OpCheckInInfo = OpCheckin.query.filter_by(
-                patientid=formPatientId, jips=True).order_by(OpCheckin.patientid.desc()).first()
-            # 如果病人需要住院
-            if OpCheckInInfo:
-                return redirect(url_for('.depositPay',  patientid=formPatientId, opcheckid=OpCheckInInfo.opcheckinid))
-            else:
-                flash('查找不到该病人')
-                return render_template('charges/depositCheck.html', form=checkForm, name=name)
+        formPatientid = form.patientid.data
+        depositInfo = InPatientDeposit.query.filter_by(
+            patientid=formPatientid, ischeck=False).order_by(InPatientDeposit.id.desc()).first()
+        patientInfo = PatientInfo.query.filter_by(id=formPatientid).first()
+        if depositInfo and patientInfo:
+            form.name.data = patientInfo.name
+            form.age.data = patientInfo.age
+            form.sex.data = patientInfo.sex
+            return redirect('/charges/pay/real?patientid=%s&id=%s'%(formPatientid, depositInfo.id))
+        else:
+            flash('查找不到该病人')
+            return render_template('charges/payCheck.html', form=form, name=name)
+    
+@charges.route('/charges/pay/real', methods=['GET', 'POST'])
+@is_login
+def payReal(name):
+    if request.method == 'GET':
+        id = request.args.get('id')
+        depositInfo = InPatientDeposit.query.filter_by(
+            id=id).order_by(InPatientDeposit.id.desc()).first()
+        tableSetInfo = InPatientTableSet.query.filter_by(id=id).first()
+        checkInfo = InPatientCheck.query.filter_by(tableid=id).all()
+        inspectInfo = InPatientInspect.query.filter_by(tableid=id).all()
+        prespectInfo = InPatientPrescript.query.filter_by(tableid=id).all()
+        checkItems = []
+        inspectItems = []
+        prespecItems = []
+        bedItems = []
+        count = 0
+        for i in checkInfo:
+            count = count + float(i.cost)
+        for i in inspectInfo:
+            count = count + float(i.cost)
+        for i in prespectInfo:
+            count = count + float(i.cost)
+        
+        return render_template('charges/payReal.html', total=count, rest=depositInfo.rest)
+
