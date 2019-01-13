@@ -3,13 +3,15 @@ from . import auth
 from .form import LoginForm, RegisterFrom
 from ..model import UserInfo
 from .. import db
+from ..decorator import isauth
 
 
 @auth.route('/login', methods=['GET', 'POST'])
-def login():
+@isauth
+def login(auth):
     form = LoginForm()
     if request.method == 'GET':
-        return render_template('auth/login.html', form=form)
+        return render_template('auth/login.html', form=form, auth= auth)
     else:
         if form.validate_on_submit():
             user = UserInfo.query.filter_by(id=form.id.data).first()
@@ -19,8 +21,8 @@ def login():
                 response.set_cookie('doctorname', user.name)
                 return response
             else:
-                return render_template('auth/login.html', form=form, nodata=True)
-    return render_template('auth/login.html', form=form)
+                return render_template('auth/login.html', form=form, nodata=True, auth= auth)
+    return render_template('auth/login.html', form=form, auth= auth)
 
 
 @auth.route('/logout', methods=['GET', 'POST'])

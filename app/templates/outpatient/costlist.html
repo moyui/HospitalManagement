@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 门诊挂号 {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h3>费用查询</h3>
+</div>
+<div>
+    {{ wtf.quick_form(form) }}
+    <p>您当前的挂号单号是：{{ nowpcheckid }}</p>
+</div>
+<div class="col-md-4">
+        <p>您的门诊挂号单号是:{{ checkinid }}</p>
+        <p>挂号费用：{{ checkincost }}</p>
+        <p>检验费用：{{ examcost }}</p>
+        <p>检查费用：{{ checkcost }}</p>
+        <p>处方药品费用：{{ recipecost }}</p>
+</div>
+<div class="col-md-4">
+    <p>检验项目为：</p>
+    {% for item in ename %}
+    <p>{{ item }}</p>
+    {% endfor %}
+    <p>检查项目为：</p>
+    {% for item in cname %}
+    <p>{{ item }}</p>
+    {% endfor %}
+    <p>处方药品为：</p>
+    {% for key, value in m.items() %}
+    <p>药品名：{{ key }} 数量：{{ value }}</p>
+    {% endfor %}
+</div>
+{% endblock %} 

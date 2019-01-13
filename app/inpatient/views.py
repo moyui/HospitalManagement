@@ -3,16 +3,17 @@ from . import inpatient
 from .form import InPatientLoginFrom, InPatientTableSetFrom, InPatientCloseBedForm, InPatientCloseBedForm, InPatientNewBedForm, InPatientInspectForm, InPatientCheckForm, InpatientPrescriptForm
 from ..model import InPatientCheck, InPatientInspect, InPatientPrescript, InPatientTableSet, InPatientTimeAndBed, PatientInfo, InPatientDeposit, BedInfo, Price, Medicine, UserInfo,ExamItem, CheckItem
 from .. import db
-from ..decorator import is_login
+from ..decorator import is_login, isauth
 import datetime
 
 
 @inpatient.route('/inpatient', methods=['GET', 'POST'])
 @is_login
-def index(name):
+@isauth
+def index(name, auth):
     form = InPatientLoginFrom()
     if request.method == 'GET':
-        return render_template('inpatient/login.html', form=form, name=name)
+        return render_template('inpatient/login.html', form=form, name=name, auth=auth)
     else:
         formPatientid = form.patientid.data
         depositInfo = InPatientDeposit.query.filter_by(
@@ -22,23 +23,25 @@ def index(name):
             form.name.data = patientInfo.name
             form.age.data = patientInfo.age
             form.sex.data = patientInfo.sex
-            return render_template('inpatient/login.html', form=form, patientid=formPatientid, id=depositInfo.id, name=name)
+            return render_template('inpatient/login.html', form=form, patientid=formPatientid, id=depositInfo.id, name=name, auth=auth)
         else:
             flash('查找不到该病人')
-            return render_template('inpatient/login.html', form=form, name=name)
+            return render_template('inpatient/login.html', form=form, name=name, auth=auth)
 
 
 @inpatient.route('/inpatient/list', methods=['GET', 'POST'])
 @is_login
-def patientList(name):
+@isauth
+def patientList(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
-    return render_template('inpatient/list.html', patientid=patientid, id=id, name=name)
+    return render_template('inpatient/list.html', patientid=patientid, id=id, name=name, auth=auth)
 
 
 @inpatient.route('/inpatient/registertabset', methods=['GET', 'POST'])
 @is_login
-def registerTableSet(name):
+@isauth
+def registerTableSet(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     tableSetInfo = InPatientTableSet.query.filter_by(id=id).first()
@@ -97,10 +100,10 @@ def registerTableSet(name):
                 doctorid = i.doctorinfoid
                 doctorname = UserInfo.query.filter_by(id=doctorid).first().name
                 bedItems.append({'id': i.id, 'bedid': i.bedid, 'doctorname': doctorname,'startdate': i.startdate, 'enddate': i.enddate})
-            return render_template('inpatient/tableset.html', check=checkItems, persect=prespecItems, inspect=inspectItems, name=name, patientid=patientid, id=id, bed=bedItems)
+            return render_template('inpatient/tableset.html', check=checkItems, persect=prespecItems, inspect=inspectItems, name=name, patientid=patientid, id=id, bed=bedItems, auth= auth)
         else:
             form.id.data = patientid
-            return render_template('inpatient/tableset.html', nodata=True, form=form, name=name, patientid=patientid, id=id)
+            return render_template('inpatient/tableset.html', nodata=True, form=form, name=name, patientid=patientid, id=id, auth= auth)
     else:
         tableset = InPatientTableSet(
             id=id,
@@ -120,19 +123,21 @@ def registerTableSet(name):
 
 @inpatient.route('/inpatient/bed', methods=['GET', 'POST'])
 @is_login
-def bed(name):
+@isauth
+def bed(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     myBed = InPatientTimeAndBed.query.filter_by(
         tableid=id).order_by(InPatientTimeAndBed.id.desc()).first()
     print(myBed)
     if request.method == 'GET':
-        return render_template('inpatient/bed/index.html', myBed=myBed, patientid=patientid, id=id, name=name)
+        return render_template('inpatient/bed/index.html', myBed=myBed, patientid=patientid, id=id, name=name, auth= auth)
 
 
 @inpatient.route('/inpatient/bed/close', methods=['GET', 'POST'])
 @is_login
-def closeBed(name):
+@isauth
+def closeBed(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientCloseBedForm()
@@ -142,7 +147,7 @@ def closeBed(name):
         form.bedId.data = myBed.bedid
         form.startDate.data = myBed.startdate
         form.endDate.data = datetime.datetime.now()
-        return render_template('inpatient/bed/closeBed.html', myBed=myBed, form=form, name=name)
+        return render_template('inpatient/bed/closeBed.html', myBed=myBed, form=form, name=name, auth=auth)
     else:
         myBed.enddate = datetime.datetime.now()
         bedtable = BedInfo.query.filter_by(id=myBed.bedid).first()
@@ -154,13 +159,14 @@ def closeBed(name):
 
 @inpatient.route('/inpatient/bed/new', methods=['GET', 'POST'])
 @is_login
-def newBed(name):
+@isauth
+def newBed(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientNewBedForm()
     doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
-        return render_template('inpatient/bed/newBed.html', form=form, name=name)
+        return render_template('inpatient/bed/newBed.html', form=form, name=name, auth= auth)
     else:
         bed = InPatientTimeAndBed(
             tableid=id,
@@ -193,14 +199,15 @@ def newBed(name):
 
 @inpatient.route('/inaptient/check', methods=['GET', 'POST'])
 @is_login
-def check(name):
+@isauth
+def check(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientCheckForm()
     doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
         form.opid.data = id
-        return render_template('inpatient/check.html', form=form, name=name)
+        return render_template('inpatient/check.html', form=form, name=name, auth= auth)
     else:
         if form.validate_on_submit():
             count = 0
@@ -222,14 +229,15 @@ def check(name):
 
 @inpatient.route('/inaptient/inspect', methods=['GET', 'POST'])
 @is_login
-def inspect(name):
+@isauth
+def inspect(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InPatientInspectForm()
     doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
         form.opid.data = id
-        return render_template('inpatient/inspect.html', form=form, name=name)
+        return render_template('inpatient/inspect.html', form=form, name=name, auth=auth)
     else:
         if form.validate_on_submit():
             count = 0
@@ -251,14 +259,15 @@ def inspect(name):
 
 @inpatient.route('/inpatient/recipe', methods=['GET', 'POST'])
 @is_login
-def recipe(name):
+@isauth
+def recipe(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InpatientPrescriptForm()
     doctorid = request.cookies.get('doctorid')
     if request.method == 'GET':
         form.opid.data = id
-        return render_template('/inpatient/medicine.html', form=form, name=name)
+        return render_template('/inpatient/medicine.html', form=form, name=name, auth=auth)
     else:
         if form.validate_on_submit():
             prescript = InPatientPrescript(
@@ -275,7 +284,8 @@ def recipe(name):
 
 @inpatient.route('/inpatient/recipenum', methods=['GET', 'POST'])
 @is_login
-def recipenum(name):
+@isauth
+def recipenum(name, auth):
     patientid = request.args.get('patientid')
     id = request.args.get('id')
     form = InpatientPrescriptForm()
@@ -291,7 +301,7 @@ def recipenum(name):
             med = Medicine.query.filter_by(id=i).first()
             medname = med.medicinename
             medicineNameList.append(medname)
-        return render_template('inpatient/recipenum.html', medsnlist=medicineNameList, name=name)
+        return render_template('inpatient/recipenum.html', medsnlist=medicineNameList, name=name, auth=auth)
     else:
         mednumbers = []
         d = request.values.to_dict()

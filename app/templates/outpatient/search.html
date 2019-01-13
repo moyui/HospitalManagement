@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 门诊挂号 {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h3>挂号信息</h3>
+</div>
+<div>
+    {{ wtf.quick_form(form) }}
+</div>
+<div class="col-md-4">
+    <p>您的门诊挂号单号是:{{ nowpcheckid }}</p>
+    <p>患者姓名：{{ pname }}</p>
+    <p>医生姓名：{{ dname }}</p>
+    <p>医生职称：{{ drank }}</p>
+    <p>所挂科室：{{ classname }}</p>
+    <p>住院状态：{{ ipstatus }}</p>
+</div>
+{% endblock %} 

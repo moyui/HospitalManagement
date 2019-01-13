@@ -16,6 +16,12 @@ class UserInfo(db.Model):  # 医生，管理员，院长一张表
     rank = db.Column(db.Integer)  # 0-普通 1-副主治 2-主治 3-专家
     password = db.Column(db.String(64))
     groupid = db.Column(db.Integer, db.ForeignKey('usergroup.id'))
+    ismenzhen = db.Column(db.Boolean)
+    iszhuyuan = db.Column(db.Boolean)
+    isjiating = db.Column(db.Boolean)
+    isjizhen = db.Column(db.Boolean)
+    isshoufei = db.Column(db.Boolean)
+    isguahao = db.Column(db.Boolean)
 
 
 class HospitalConstuct(db.Model):
@@ -48,36 +54,13 @@ class DoctorTimetable(db.Model):
     id = db.Column(db.String(64), primary_key=True)
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
+    cid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
 
 class ImgDoctorTimetable(db.Model):
     __tablename__ = 'imgdoctortimetable'
     id = db.Column(db.String(64), primary_key=True)
     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
     doctortime = db.Column(db.Integer)
-
-# 医生轮作
-
-
-# class DoctorCycle(db.Model):
-#     __tablename__ = 'doctorcycle'
-#     id = db.Column(db.Integer, primary_key=True)
-#     doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-#     classid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
-
-
-# class OutPatientTimetable(db.Model):
-#     __tablename__ = 'outpatienttimetable'
-#     id = db.Column(db.Integer, primary_key=True)
-#     doctorcycleid = db.Column(db.Integer, db.ForeignKey('doctorcycle.id'))
-#     date = db.Column(db.String(128))  # 准备一个时间段与字符串数字相对应 01 -> 9:00 - 10： 00
-
-# class InPatientTimetable(db.Model):
-#     __tablename__ = 'inpatienttimetable'
-#     id = db.Column(db.Integer, primary_key=True)
-#     userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-#     date = db.Column(db.String(128))
-
-# 缺少急诊
 
 
 class ExpertsTimetable(db.Model):
@@ -202,7 +185,7 @@ class OpCheckin(db.Model):
     __tablename__ = 'opcheckin'
     opcheckinid = db.Column(db.Integer, primary_key=True)
     patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
-    doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
+    doctorid = db.Column(db.String(20), db.ForeignKey('userinfo.id'))
     doctortype = db.Column(db.Integer)
     # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
     jips = db.Column(db.Boolean)
@@ -345,7 +328,7 @@ class ImgpCheckin(db.Model):
     __tablename__ = 'imgpcheckin'
     imgpcheckinid = db.Column(db.Integer, primary_key= True)
     patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
-    doctorid = db.Column(db.String(10), db.ForeignKey('userinfo.id'))
+    doctorid = db.Column(db.String(20), db.ForeignKey('userinfo.id'))
     doctortype = db.Column(db.Integer)
     # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
     # jips = db.Column(db.Boolean)

@@ -5,7 +5,6 @@ from ..model import OpCheckin, ExamItem, CheckItem, Medicine, DoctorTimetable, E
 from datetime import datetime
 
 class OpCheckinForm(FlaskForm):
-    patientid = StringField('身份证', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '身份证必须是数字或者大小写X')])
     doctorname = SelectField('医生姓名', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
@@ -17,7 +16,7 @@ class OpCheckinForm(FlaskForm):
         did =[]
         en = []
         eid = []
-        print(dw)
+        # print(dw)
         doctorinfo = DoctorTimetable.query.filter_by(doctortime= dw).all()
         expertinfo = ExpertsTimetable.query.filter_by(date= dw).all()
         for i in doctorinfo:
@@ -37,11 +36,12 @@ class OpCheckinForm(FlaskForm):
             print(i)
         self.doctorname.choices = zip(did, dn)
 
+class OpCheckinTwoForm(FlaskForm):
+    submit = SubmitField('确认提交')
+
 class OpExamForm(FlaskForm):
-    opid = StringField('患者号', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
     examitems = SelectMultipleField('检验项目', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
-    print(examitems)
 
     def __init__(self, *args, **kwargs):
         super(OpExamForm, self).__init__(*args, **kwargs)
@@ -50,7 +50,6 @@ class OpExamForm(FlaskForm):
         self.examitems.choices = examlist 
 
 class OpCheckForm(FlaskForm):
-    opid = StringField('患者号', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
     checkitems = SelectMultipleField('检查项目', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
@@ -60,7 +59,6 @@ class OpCheckForm(FlaskForm):
         self.checkitems.choices = checklist
     
 class OpRecipeForm(FlaskForm):
-    opid = StringField('患者号', validators=[DataRequired(), Length(8, 20), Regexp('^[0-9Xx]*$', 0, '患者号必须是数字或者大小写X')])
     medicines = SelectMultipleField('药品', widget= widgets.ListWidget(prefix_label=False), option_widget= widgets.CheckboxInput())
     submit = SubmitField('确定')
 
@@ -69,6 +67,17 @@ class OpRecipeForm(FlaskForm):
         medicinelist = Medicine.query.with_entities(Medicine.id, Medicine.medicinename).all()
         self.medicines.choices = medicinelist
 
-class OpIndexFrom(FlaskForm):
+class OpIndexForm(FlaskForm):
     inpatientcheck = BooleanField('住院')
     submit = SubmitField('确定')
+
+class OpSearchForm(FlaskForm):
+    opcheckinid = StringField('请输入您的门诊挂号单号')
+    submit = SubmitField('查询')
+
+class OpCostListForm(FlaskForm):
+    opcheckinid = StringField('请输入您的门诊挂号单号')
+    submit = SubmitField('查询')
+
+class OpExitForm(FlaskForm):
+    submit = SubmitField('注销')

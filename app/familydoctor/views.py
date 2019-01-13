@@ -4,23 +4,28 @@ from .form import FamilyPatientInfoForm, TestResultForm, SCListForm, FDCreateFor
 from ..model import FamilyDoctorArea, FamilyDoctor, FamilyDoctorWorkArea, FamilyPatientInfo, FamilyPatientTestResult, SpecialConcern, LecturePlace, LectureTime, UserInfo, DoctorTimetable
 from .. import db
 import datetime
+from ..decorator import is_login, isauth
 
 @familydoctor.route('/familydoctor', methods=['GET', 'POST'])
-def index():
+@is_login
+@isauth
+def index(name, auth):
     if request.method == 'GET':
-        return render_template('/familydoctor/list.html')
+        return render_template('/familydoctor/list.html',name=name, auth=auth)
 
 @familydoctor.route('/familydoctor/PatientInfo', methods=['GET', 'POST'])
-def fdpatientinfo():
+@is_login
+@isauth
+def fdpatientinfo(name, auth):
     form = FamilyPatientInfoForm()
     pid = form.patientid.data
     if request.method == 'GET':
-        return render_template('/familydoctor/patientinfo.html', form=form)
+        return render_template('/familydoctor/patientinfo.html', form=form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
             searchinfo = FamilyPatientInfo.query.filter_by(id = pid).first()
             if searchinfo:
-                return render_template('/familydoctor/patientinfo.html', form=form, nodata=True)
+                return render_template('/familydoctor/patientinfo.html', form=form, nodata=True,name=name, auth=auth)
             else:
                 p = FamilyPatientInfo(
                 id=form.patientid.data,
@@ -33,11 +38,13 @@ def fdpatientinfo():
                 return redirect(url_for('familydoctor.fdpatientinfo'))
 
 @familydoctor.route('/familydoctor/Testresult', methods=['GET', 'POST'])
-def testresult():
+@is_login
+@isauth
+def testresult(name, auth):
     form = TestResultForm()
     pid = form.patientid.data
     if request.method == 'GET':
-        return render_template('/familydoctor/Testresult.html', form=form)
+        return render_template('/familydoctor/Testresult.html', form=form,name=name, auth=auth)
     else:        
         if form.validate_on_submit():
             searchinfo = FamilyPatientInfo.query.filter_by(id = pid).first()
@@ -54,14 +61,16 @@ def testresult():
                 db.session.commit()
                 return redirect(url_for('familydoctor.testresult'))
             else:
-                return render_template('/familydoctor/Testresult.html', form=form, nodata=True)
+                return render_template('/familydoctor/Testresult.html', form=form, nodata=True,name=name, auth=auth)
 
 @familydoctor.route('/familydoctor/SpecialConcern', methods=['GET', 'POST'])
-def specialconcern():
+@is_login
+@isauth
+def specialconcern(name, auth):
     form = SCListForm()
     tdate = form.listdate.data
     if request.method == 'GET':
-        return render_template('/familydoctor/specialconcern.html', form=form)
+        return render_template('/familydoctor/specialconcern.html', form=form,name=name, auth=auth)
     else:        
         if form.validate_on_submit():
             searchinfo = FamilyPatientTestResult.query.filter_by(FPresultdate = tdate).all()
@@ -84,17 +93,19 @@ def specialconcern():
             return redirect(url_for('familydoctor.specialconcern'))
 
 @familydoctor.route('/familydoctor/areainfo', methods=['GET', 'POST'])
-def areainfo():
+@is_login
+@isauth
+def areainfo(name, auth):
     form = FDAreaForm()
     if request.method == 'GET':
-        return render_template('/familydoctor/area.html', form=form)
+        return render_template('/familydoctor/area.html', form=form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
             aid = form.areaid.data
             aname = form.areaname.data
             searchinfo = FamilyDoctorArea.query.filter_by(id = aid).first()
             if searchinfo:
-                return render_template('/familydoctor/area.html', form=form, nodata = True)
+                return render_template('/familydoctor/area.html', form=form, nodata = True,name=name, auth=auth)
             else:
                 a = FamilyDoctorArea(
                     id = aid,
@@ -105,17 +116,19 @@ def areainfo():
                 return redirect(url_for('familydoctor.areainfo'))
 
 @familydoctor.route('/familydoctor/lectureinfo', methods=['GET', 'POST'])
-def lectureinfo():
+@is_login
+@isauth
+def lectureinfo(name, auth):
     form = FDLectureForm()
     if request.method == 'GET':
-        return render_template('/familydoctor/lectureinfo.html', form=form)
+        return render_template('/familydoctor/lectureinfo.html', form=form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
             lpid = form.lecid.data
             lpname = form.lecname.data
             searchinfo = LecturePlace.query.filter_by(id = lpid).first()
             if searchinfo:
-                return render_template('/familydoctor/lectureinfo.html', form=form, nodata = True)
+                return render_template('/familydoctor/lectureinfo.html', form=form, nodata = True,name=name, auth=auth)
             else:
                 a = LecturePlace(
                     id = lpid,
@@ -126,10 +139,12 @@ def lectureinfo():
                 return redirect(url_for('familydoctor.lectureinfo'))
 
 @familydoctor.route('/familydoctor/familydoctorcreate', methods=['GET', 'POST'])
-def fdcreate():
+@is_login
+@isauth
+def fdcreate(name,auth):
     form = FDCreateForm()
     if request.method == 'GET':
-        return render_template('/familydoctor/createfd.html', form=form)
+        return render_template('/familydoctor/createfd.html', form=form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
             searchinfo = UserInfo.query.filter_by(rank = 2).all()
@@ -299,10 +314,12 @@ def fdcreate():
                 return redirect(url_for('familydoctor.fdcreate'))
 
 @familydoctor.route('/familydoctor/familydoctordelete', methods=['GET', 'POST'])
-def fddelete():
+@is_login
+@isauth
+def fddelete(name, auth):
     form = FDdelete()
     if request.method == 'GET':
-        return render_template('/familydoctor/deletefd.html', form=form)
+        return render_template('/familydoctor/deletefd.html', form=form, auth=auth)
     else:
         if form.validate_on_submit():
             searchinfo = FamilyDoctor.query.filter_by(FDdoctorid = form.fddid.data).first()
@@ -320,63 +337,75 @@ def fddelete():
             return redirect(url_for('familydoctor.fddelete'))
 
 @familydoctor.route('/familydoctor/familydoctorshow', methods=['GET', 'POST'])
-def familydoctorshow():
+@is_login
+@isauth
+def familydoctorshow(name, auth):
     form = FamilyDoctorShow()
     searchinfo = FamilyDoctor.query.order_by(FamilyDoctor.id).all()
     if request.method == 'GET':
-        return render_template('/familydoctor/fdshow.html', form = form)
+        return render_template('/familydoctor/fdshow.html', form = form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
-            return render_template('/familydoctor/fdshow.html', form = form, fdinfo = searchinfo)
+            return render_template('/familydoctor/fdshow.html', form = form, fdinfo = searchinfo,name=name, auth=auth)
 
 @familydoctor.route('/familydoctor/familydoctorworkshow', methods=['GET', 'POST'])
-def familydoctorworkshow():
+@is_login
+@isauth
+def familydoctorworkshow(name, auth):
     form = FamilyDoctorWorkShow()
     searchinfo = FamilyDoctorWorkArea.query.order_by(FamilyDoctorWorkArea.id).all()
     if request.method == 'GET':
-        return render_template('/familydoctor/fdwshow.html', form = form)
+        return render_template('/familydoctor/fdwshow.html', form = form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
-            return render_template('/familydoctor/fdwshow.html', form = form, fdwinfo = searchinfo)
+            return render_template('/familydoctor/fdwshow.html', form = form, fdwinfo = searchinfo,name=name, auth=auth)
 
 @familydoctor.route('/familydoctor/familydoctorlecturehow', methods=['GET', 'POST'])
-def familydoctorlecturehow():
+@is_login
+@isauth
+def familydoctorlecturehow(name, auth):
     form = FamilyDoctorLecturekShow()
     searchinfo = LectureTime.query.order_by(LectureTime.id).all()
     if request.method == 'GET':
-        return render_template('/familydoctor/fdlshow.html', form = form)
+        return render_template('/familydoctor/fdlshow.html', form = form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
-            return render_template('/familydoctor/fdlshow.html', form = form, fdlinfo = searchinfo)
+            return render_template('/familydoctor/fdlshow.html', form = form, fdlinfo = searchinfo,name=name,auth=auth)
 
 @familydoctor.route('/familydoctor/familydoctorpinfoshow', methods=['GET', 'POST'])
-def familyDoctorpinfoshow():
+@is_login
+@isauth
+def familyDoctorpinfoshow(name, auth):
     form = FamilyDoctorpinfoshow()
     pid = form.patientid.data
     searchinfo = FamilyPatientInfo.query.filter_by(id = pid).all()
     if request.method == 'GET':
-        return render_template('/familydoctor/fdpinfoshow.html', form = form)
+        return render_template('/familydoctor/fdpinfoshow.html', form = form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
-            return render_template('/familydoctor/fdpinfoshow.html', form = form, fdpinfo = searchinfo)
+            return render_template('/familydoctor/fdpinfoshow.html', form = form, fdpinfo = searchinfo,name=name, auth=auth)
 
 @familydoctor.route('/familydoctor/familydoctortrshow', methods=['GET', 'POST'])
-def familyDoctorptsshow():
+@is_login
+@isauth
+def familyDoctorptsshow(name, auth):
     form = FamilyDoctorpinfoshow()
     pid = form.patientid.data
     searchinfo = FamilyPatientTestResult.query.filter_by(FPid = pid).all()
     if request.method == 'GET':
-        return render_template('/familydoctor/fdptrshow.html', form = form)
+        return render_template('/familydoctor/fdptrshow.html', form = form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
-            return render_template('/familydoctor/fdptrshow.html', form = form, fdptrinfo = searchinfo)
+            return render_template('/familydoctor/fdptrshow.html', form = form, fdptrinfo = searchinfo,name=name, auth=auth)
 
 @familydoctor.route('/familydoctor/scshow', methods=['GET', 'POST'])
-def scshow():
+@is_login
+@isauth
+def scshow(name, auth):
     form = FamilyDoctorLecturekShow()
     searchinfo = SpecialConcern.query.order_by(SpecialConcern.id).all()
     if request.method == 'GET':
-        return render_template('/familydoctor/scshow.html', form = form)
+        return render_template('/familydoctor/scshow.html', form = form,name=name, auth=auth)
     else:
         if form.validate_on_submit():
-            return render_template('/familydoctor/scshow.html', form = form, scinfo = searchinfo)
+            return render_template('/familydoctor/scshow.html', form = form, scinfo = searchinfo,name=name, auth=auth)

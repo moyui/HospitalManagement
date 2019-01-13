@@ -4,21 +4,23 @@ from . import charges
 from .form import PreChargeCheckForm, PreChargePayForm, PreChargeLoginFrom
 from ..model import InPatientDeposit, PatientInfo, OpCheckin, BedInfo, Price, Medicine, UserInfo,ExamItem, CheckItem, InPatientTableSet,InPatientCheck, InPatientInspect,InPatientPrescript, InPatientTimeAndBed
 from .. import db
-from ..decorator import is_login
+from ..decorator import is_login, isauth
 
 
 @charges.route('/charges', methods=['GET', 'POST'])
 @is_login
-def index(name):
-    return render_template('charges/index.html', name=name)
+@isauth
+def index(name, auth):
+    return render_template('charges/index.html', name=name, auth=auth)
 
 
 @charges.route('/charges/deposit/check', methods=['GET', 'POST'])
 @is_login
-def depositCheck(name):
+@isauth
+def depositCheck(name, auth):
     checkForm = PreChargeCheckForm()
     if request.method == 'GET':
-        return render_template('charges/depositCheck.html', form=checkForm, name=name)
+        return render_template('charges/depositCheck.html', form=checkForm, name=name, auth=auth)
     else:
         if checkForm.validate_on_submit():
             formPatientId = checkForm.id.data
@@ -30,12 +32,13 @@ def depositCheck(name):
                 return redirect(url_for('.depositPay',  patientid=formPatientId, opcheckid=OpCheckInInfo.opcheckinid))
             else:
                 flash('查找不到该病人')
-                return render_template('charges/depositCheck.html', form=checkForm, name=name)
+                return render_template('charges/depositCheck.html', form=checkForm, name=name, auth=auth)
 
 
 @charges.route('/charges/deposit/pay', methods=['GET', 'POST'])
 @is_login
-def depositPay(name):
+@isauth
+def depositPay(name, auth):
     patientId = request.args.get('patientid')
     opCheckInId = request.args.get('opcheckid')
     payForm = PreChargePayForm()
@@ -49,9 +52,9 @@ def depositPay(name):
         payForm.sex.data = patientInfo.sex
         # 查看剩余押金数
         if depositInfo:
-            return render_template('charges/depositPay.html', rest=depositInfo.rest, form=payForm, name=name)
+            return render_template('charges/depositPay.html', rest=depositInfo.rest, form=payForm, name=name, auth=auth)
         else:
-            return render_template('charges/depositPay.html', rest=0, form=payForm, name=name)
+            return render_template('charges/depositPay.html', rest=0, form=payForm, name=name, auth=auth)
     else:
         if payForm.validate_on_submit():
             # 查询押金表
@@ -75,10 +78,11 @@ def depositPay(name):
 
 @charges.route('/charges/pay/check', methods=['GET', 'POST'])
 @is_login
-def payCheck(name):
+@isauth
+def payCheck(name, auth):
     form = PreChargeLoginFrom()
     if request.method == 'GET':
-        return render_template('charges/payCheck.html', form=form, name=name)
+        return render_template('charges/payCheck.html', form=form, name=name, auth= auth)
     else:
         formPatientid = form.patientid.data
         depositInfo = InPatientDeposit.query.filter_by(
@@ -91,11 +95,12 @@ def payCheck(name):
             return redirect('/charges/pay/real?patientid=%s&id=%s'%(formPatientid, depositInfo.id))
         else:
             flash('查找不到该病人')
-            return render_template('charges/payCheck.html', form=form, name=name)
+            return render_template('charges/payCheck.html', form=form, name=name, auth=auth)
     
 @charges.route('/charges/pay/real', methods=['GET', 'POST'])
 @is_login
-def payReal(name):
+@isauth
+def payReal(name, auth):
     if request.method == 'GET':
         id = request.args.get('id')
         depositInfo = InPatientDeposit.query.filter_by(
@@ -112,5 +117,5 @@ def payReal(name):
         for i in prespectInfo:
             count = count + float(i.cost)
         
-        return render_template('charges/payReal.html', total=count, rest=depositInfo.rest)
+        return render_template('charges/payReal.html', total=count, rest=depositInfo.rest, auth=auth)
 

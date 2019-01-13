@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 门诊挂号 {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h3>门诊挂号</h3>
+</div>
+<div class="col-md-4">
+    <p>您的门诊挂号单号是{{ nowpcheckid }}</p>
+    <p>{{ pstr }}</p>
+    <p>{{ dstr }}{{ drank }}</p>
+    <p>科室名：{{ classn }}</p>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %} 

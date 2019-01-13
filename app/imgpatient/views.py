@@ -2,18 +2,19 @@ from flask import render_template, redirect, request, url_for, flash, make_respo
 from .import imgpatient
 from .form import ImgpCheckinForm, ImgpRecipeForm
 from ..model import  Medicine, Price, UserInfo, ImgDoctorTimetable, ImgpCheckin, ImgpCheckinAfford, ImgpRecipe, ImgpRecipeAfford, ImgpCost
-from ..decorator import is_login
+from ..decorator import is_login, isauth
 from .. import db
 import datetime
 
 @imgpatient.route('/imgpatient/checkin', methods= ['GET', 'POST'])
 @is_login
-def checkin(name):
+@isauth
+def checkin(name, auth):
         patientcheckin = ImgpCheckin()
         form = ImgpCheckinForm()
         price = ImgpCheckinAfford()
         if request.method == 'GET':
-                return render_template('imgpatient/checkin.html', form= form, name= name)
+                return render_template('imgpatient/checkin.html', form= form, name= name, auth=auth)
         else:
                 if form.validate_on_submit():
                         response = make_response(redirect(url_for('imgpatient.imgpindex')))
@@ -21,19 +22,20 @@ def checkin(name):
                         patientcheckin.imgpcheckinid = prepatient.imgpcheckinid + 1
 
                         nowpcheckid = patientcheckin.imgpcheckinid
-                        response.set_cookie('nopcid', str(nowpcheckid))
+                        response.set_cookie('img', str(nowpcheckid))
 
                         patientcheckin.patientid = form.patientid.data
                         patientcheckin.doctorid = form.doctorname.data
                         docid = UserInfo.query.filter_by(id= form.doctorname.data).first()
                         patientcheckin.doctortype = docid.rank
+                        db.session.add(patientcheckin)
+                        db.session.commit()
 
                         price.imgpcheckinid = patientcheckin.imgpcheckinid
                         price.imgpid = form.patientid.data
                         priceinfo = Price.query.filter_by(optionid= docid.rank).first()
                         price.price = priceinfo.price
 
-                        db.session.add(patientcheckin)
                         db.session.add(price)
                         db.session.commit()
 
@@ -41,21 +43,23 @@ def checkin(name):
 
 @imgpatient.route('/imgpatient/imgpindex', methods= ['GET', 'POST'])
 @is_login
-def imgpindex(name):
-        nowpcheckid = int(request.cookies.get('nopcid'))
+@isauth
+def imgpindex(name, auth):
+        nowpcheckid = int(request.cookies.get('img'))
         if request.method == 'GET':
-                # nowpcheckid = request.cookies.get('nopcid')
+                # nowpcheckid = request.cookies.get('img')
                 # print('2', type(int(nowpcheckid)), int(nowpcheckid))
-                return render_template('imgpatient/imgpindex.html', name= name)
+                return render_template('imgpatient/imgpindex.html', name= name, auth=auth)
     
 @imgpatient.route('/imgpatient/recipe', methods= ['GET', 'POST'])
 @is_login
-def recipe(name):
+@isauth
+def recipe(name, auth):
         patientrecipe=ImgpRecipe()
         form = ImgpRecipeForm()
-        nowpcheckid = request.cookies.get('nopcid')
+        nowpcheckid = request.cookies.get('img')
         if request.method == 'GET':
-               return render_template('/imgpatient/medicine.html', form= form, name= name)
+               return render_template('/imgpatient/medicine.html', form= form, name= name, auth=auth)
         else: 
                 if form.validate_on_submit():
                         patientrecipe.imgpcheckinid = int(nowpcheckid)
@@ -67,8 +71,9 @@ def recipe(name):
 
 @imgpatient.route('/imgpatient/recipenum', methods= ['GET', 'POST'])
 @is_login
-def recipenum(name):
-        nowpcheckid = request.cookies.get('nopcid')
+@isauth
+def recipenum(name, auth):
+        nowpcheckid = request.cookies.get('img')
         price = ImgpRecipeAfford()
         if request.method == 'GET':
                 patientcheckinid = int(nowpcheckid)
@@ -80,7 +85,7 @@ def recipenum(name):
                         med = Medicine.query.filter_by(id= item).first()
                         medname = med.medicinename
                         medsnlist.append(medname)
-                return render_template('imgpatient/recipenum.html', medsnlist= medsnlist, name= name)
+                return render_template('imgpatient/recipenum.html', medsnlist= medsnlist, name= name, auth=auth)
         else:
                 patientcheckinid = int(nowpcheckid)
                 imgprecipe = ImgpRecipe.query.filter(ImgpRecipe.imgpcheckinid == patientcheckinid).first()
@@ -116,9 +121,10 @@ def recipenum(name):
 
 @imgpatient.route('/imgpatient/cost', methods= ['GET', 'POST'])
 @is_login
-def cost(name):
+@isauth
+def cost(name, auth):
         cost = ImgpCost()
-        nowpcheckid = int(request.cookies.get('nopcid'))
+        nowpcheckid = int(request.cookies.get('img'))
         if request.method == 'GET':
                 imgpcheckininfo = ImgpCheckinAfford.query.filter_by(imgpcheckinid= nowpcheckid).first()
                 imgprecipeinfo = ImgpRecipeAfford.query.filter_by(imgpcheckinid= nowpcheckid).first()
@@ -132,4 +138,4 @@ def cost(name):
                 
                 db.session.add(cost)
                 db.session.commit()
-                return render_template('imgpatient/cost.html', price= price, name= name)
+                return render_template('imgpatient/cost.html', price= price, name= name, auth= auth)
