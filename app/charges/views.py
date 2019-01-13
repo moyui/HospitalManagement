@@ -2,7 +2,7 @@
 from flask import render_template, redirect, request, url_for, flash
 from . import charges
 from .form import PreChargeCheckForm, PreChargePayForm, PreChargeLoginFrom
-from ..model import InPatientDeposit, PatientInfo, OpCheckin, BedInfo, Price, Medicine, UserInfo,ExamItem, CheckItem, InPatientTableSet,InPatientCheck, InPatientInspect,InPatientPrescript, InPatientTimeAndBed
+from ..model import InPatientDeposit, PatientInfo, OpCheckin, BedInfo, Price, Medicine, UserInfo,ExamItem, CheckItem, InPatientTableSet,InPatientCheck, InPatientInspect,InPatientPrescript, InPatientTimeAndBed, Price
 from .. import db
 from ..decorator import is_login, isauth
 
@@ -109,6 +109,8 @@ def payReal(name, auth):
         checkInfo = InPatientCheck.query.filter_by(tableid=id).all()
         inspectInfo = InPatientInspect.query.filter_by(tableid=id).all()
         prespectInfo = InPatientPrescript.query.filter_by(tableid=id).all()
+        bedInfo = InPatientTimeAndBed.query.filter_by(tableid=id).all()
+        
         count = 0
         for i in checkInfo:
             count = count + float(i.cost)
@@ -116,6 +118,54 @@ def payReal(name, auth):
             count = count + float(i.cost)
         for i in prespectInfo:
             count = count + float(i.cost)
+
+        checkItems = []
+        inspectItems = []
+        prespecItems = []
+        bedItems = []
+
+        for i in checkInfo:
+            items = i.checkitemsid.split(',')
+            doctorid = i.doctorinfoid
+            doctorname = UserInfo.query.filter_by(id=doctorid).first().name
+            temp = []
+            for j in items:
+                checkInfo = CheckItem.query.filter_by(
+                    id=j).first()
+                price = Price.query.filter_by(optionid=int(checkInfo.id)).first()
+                temp.append('名称：%s 单价：%s'%(checkInfo.checkitemname, price.price))
+            checkItems.append(
+                {'id': i.id, 'name': temp, 'doctorname': doctorname, 'cost': i.cost})
+        for i in inspectInfo:
+            items = i.inspectitemsid.split(',')
+            doctorid = i.doctorinfoid
+            doctorname = UserInfo.query.filter_by(id=doctorid).first().name
+            temp = []
+            for j in items:
+                inspectInfo = ExamItem.query.filter_by(
+                    id=j).first()
+                price = Price.query.filter_by(optionid=int(inspectInfo.id)).first()
+                temp.append('名称：%s 单价：%s'%(inspectInfo.examitemname, price.price))
+            inspectItems.append(
+                {'id': i.id, 'name': temp, 'doctorname': doctorname})
+        for i in prespectInfo:
+            items = i.medicineid.split(',')
+            nums = i.medicinenumbers.split(',')
+            zipped = zip(items, nums)
+            doctorid = i.doctorinfoid
+            doctorname = UserInfo.query.filter_by(id=doctorid).first().name
+            temp = []
+            for j in zipped:
+                medicine = Medicine.query.filter_by(
+                    id=j[0]).first()
+                price = Price.query.filter_by(optionid=int(medicine.id)).first()
+                temp.append('名称：%s 数量：%s 单价：%s'%(medicine.medicinename,j[1], price.price))
+            prespecItems.append(
+                {'id': i.id, 'name': temp, 'doctorname': doctorname})
+        for i in bedInfo:
+            doctorid = i.doctorinfoid
+            doctorname = UserInfo.query.filter_by(id=doctorid).first().name
+            bedItems.append({'id': i.id, 'bedid': i.bedid, 'doctorname': doctorname,'startdate': i.startdate, 'enddate': i.enddate})
         
-        return render_template('charges/payReal.html', total=count, rest=depositInfo.rest, auth=auth)
+        return render_template('charges/payReal.html', total=count, rest=depositInfo.rest, auth=auth, check=checkItems, persect=prespecItems, inspect=inspectItems, bed=bedItems)
 

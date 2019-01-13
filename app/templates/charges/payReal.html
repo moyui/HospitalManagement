@@ -7,6 +7,69 @@
 <div class="page-header">
     <h3>缴费</h3>
 </div>
+<div class="col-md-12 page-header">
+    <div>
+        <h4>检查条目</h4>
+        <ul>
+            {% if check %}
+                {% for item in check %}
+                <li>检查单号：{{item.id}} 开具医生：{{item.doctorname}} 开具项目：
+                    {% for j in item.name %}
+                        {{j}},
+                    {% endfor %}
+                </li>
+                {% endfor %}
+            {% else %}
+            <li>暂无该项目</li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
+        <h4>检验条目</h4>
+        <ul>
+            {% if inspect %}
+                {% for item in inspect %}
+                <li>检验单号：{{item.id}} 开具医生：{{item.doctorname}} 开具项目：
+                        {% for j in item.name %}
+                            {{j}},
+                        {% endfor %}
+                </li>
+                {% endfor %}
+            {% else %}
+            <li>暂无该项目</li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
+        <h4>处方条目</h4>
+        <ul>
+            {% if persect %}
+                {% for item in persect %}
+                <li>检查单号：{{item.id}} 开具医生：{{item.doctorname}} 开具项目：
+                        {% for j in item.name %}
+                            {{j}}
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            {% else %}
+            <li>暂无该项目</li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
+        <h4>病床</h4>
+        <ul>
+            {% if bed %}
+                {% for item in bed %}
+                <li>单号：{{item.id}} 开具医生：{{item.doctorname}} 床号：{{item.bedif}} 开始日期{{item.startdate}} 结束日期：{{item.enddate}}
+                    </li>
+                {% endfor %}
+            {% else %}
+            <li>暂无该项目</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
 <div>
     <p>总计：{{total}}</p>
     <p>押金余额：{{rest}}</p>
